@@ -1,0 +1,1689 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: platform@forgesphere.example.com
+    name: ForgeSphere Platform Engineering
+  description: "Continuous resource optimization for Kubernetes workloads. Analyzes\
+    \ real \nCPU and memory usage over time and generates right-sizing recommendations\
+    \ \nfor requests and limits. Prevents both over-provisioning (wasted money) \n\
+    and under-provisioning (OOMKills, throttling). Understands workload \npatterns\
+    \ (steady, periodic, spiky) and respects criticality tiers. \nOptionally applies\
+    \ recommendations with automatic rollback on regression.\n"
+  title: Kubernetes Workload Right-Sizer
+  version: 1.0.0
+servers:
+- description: Production Server
+  url: https://rightsizer.forgesphere.lightning.com/v1
+- description: Local Development Server
+  url: http://localhost:8148/v1
+security:
+- bearerAuth: []
+tags:
+- description: "Register, monitor, and analyze Kubernetes workloads."
+  name: Workloads
+- description: Review and apply right-sizing recommendations.
+  name: Recommendations
+paths:
+  /workloads:
+    get:
+      description: "Returns all registered workloads with their current resource \n\
+        configuration and latest recommendation summary. Used by platform \nteams\
+        \ to see fleet-wide optimization opportunities and by service \nowners to\
+        \ check their workloads.\n"
+      operationId: listWorkloads
+      parameters:
+      - description: Filter by cluster.
+        example: prod-us-east-1
+        explode: true
+        in: query
+        name: clusterName
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Filter by namespace.
+        example: payments
+        explode: true
+        in: query
+        name: namespace
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Filter by owning team.
+        example: payments-team
+        explode: true
+        in: query
+        name: owner
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Filter by criticality tier.
+        explode: true
+        in: query
+        name: criticality
+        required: false
+        schema:
+          enum:
+          - TIER_0
+          - TIER_1
+          - TIER_2
+          - TIER_3
+          type: string
+        style: form
+      - description: Only workloads with pending recommendations.
+        example: true
+        explode: true
+        in: query
+        name: hasActiveRecommendation
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: Sort order.
+        explode: true
+        in: query
+        name: sortBy
+        required: false
+        schema:
+          default: POTENTIAL_SAVINGS
+          enum:
+          - POTENTIAL_SAVINGS
+          - CPU_WASTE_PERCENT
+          - MEMORY_WASTE_PERCENT
+          - OOM_RISK
+          - NAME
+          type: string
+        style: form
+      - description: Page number (zero-based).
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 0
+          type: integer
+        style: form
+      - description: Number of items per page.
+        explode: true
+        in: query
+        name: size
+        required: false
+        schema:
+          default: 20
+          maximum: 100
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkloadList"
+          description: List of workloads retrieved successfully.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid request payload or missing required fields.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: List registered workloads
+      tags:
+      - Workloads
+      x-accepts: application/json
+      x-tags:
+      - tag: Workloads
+    post:
+      description: "Registers a Deployment, StatefulSet, DaemonSet, or CronJob for\
+        \ \ncontinuous right-sizing analysis. Once registered, the service \nbegins\
+        \ collecting CPU and memory usage over a configurable window \nand generates\
+        \ recommendations on a schedule. Respects workload \ncriticality and any manual\
+        \ minimum/maximum bounds.\n"
+      operationId: registerWorkload
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/registerWorkload_request"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workload"
+          description: Workload registered for analysis.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid request payload or missing required fields.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Workload already registered for this container.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Register a Kubernetes workload for right-sizing analysis
+      tags:
+      - Workloads
+      x-content-type: application/json
+      x-accepts: application/json
+      x-tags:
+      - tag: Workloads
+  /workloads/{workloadId}:
+    get:
+      description: "Returns the full analysis for a workload — current resource config,\
+        \ \nactual usage statistics (P50/P95/P99/max), detected workload pattern,\
+        \ \nwaste percentage, OOM risk, and the complete recommendation with \nprojected\
+        \ cost savings. Includes a historical usage chart for the \nanalysis window.\n"
+      operationId: getWorkload
+      parameters:
+      - description: Unique identifier of the workload registration.
+        example: 9c8f1a3b-6d7e-4a12-8f5e-123456789abc
+        explode: false
+        in: path
+        name: workloadId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: Include hourly usage history for charting.
+        example: true
+        explode: true
+        in: query
+        name: includeUsageHistory
+        required: false
+        schema:
+          default: true
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workload"
+          description: Workload details retrieved successfully.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Workload or recommendation not found.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Get detailed workload analysis with recommendations
+      tags:
+      - Workloads
+      x-accepts: application/json
+      x-tags:
+      - tag: Workloads
+  /workloads/{workloadId}/analyze:
+    post:
+      description: "Forces a new analysis of the workload, ignoring the scheduled\
+        \ cadence. \nUseful after significant traffic changes, incident investigations,\
+        \ or \nbefore applying a previous recommendation. Regenerates the \nrecommendation\
+        \ with the latest usage data.\n"
+      operationId: analyzeWorkload
+      parameters:
+      - description: Unique identifier of the workload registration.
+        example: 9c8f1a3b-6d7e-4a12-8f5e-123456789abc
+        explode: false
+        in: path
+        name: workloadId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/analyzeWorkload_request"
+        required: true
+      responses:
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalysisJob"
+          description: Analysis triggered and running.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid request payload or missing required fields.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Workload or recommendation not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Analysis already in progress for this workload.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Trigger a fresh analysis and generate a new recommendation
+      tags:
+      - Workloads
+      x-content-type: application/json
+      x-accepts: application/json
+      x-tags:
+      - tag: Workloads
+  /recommendations/{recommendationId}/apply:
+    post:
+      description: "Applies the recommended resource changes to the live workload\
+        \ by \npatching the Kubernetes resource. Supports DRY_RUN (shows what would\
+        \ \nchange), STAGED (one replica first), and IMMEDIATE modes. Includes \n\
+        automatic monitoring for 24 hours post-apply with auto-rollback if \nOOMKills\
+        \ or throttling spike.\n"
+      operationId: applyRecommendation
+      parameters:
+      - description: Unique identifier of the recommendation.
+        example: b1a2c3d4-e5f6-7890-1234-567890abcdef
+        explode: false
+        in: path
+        name: recommendationId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/applyRecommendation_request"
+        required: true
+      responses:
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecommendationApply"
+          description: Recommendation apply accepted and progressing.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid request payload or missing required fields.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Workload or recommendation not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Recommendation is stale or already applied.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Apply a right-sizing recommendation to the workload
+      tags:
+      - Recommendations
+      x-content-type: application/json
+      x-accepts: application/json
+      x-tags:
+      - tag: Recommendations
+components:
+  responses:
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+      description: Invalid request payload or missing required fields.
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+      description: Workload or recommendation not found.
+    InternalError:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+      description: Internal server error.
+  schemas:
+    Workload:
+      example:
+        owner: payments-team
+        auditReference: audit://rightsizer/workload-9c8f1a3b
+        currentResources:
+          memoryRequestMi: 4096
+          memoryLimitMi: 8192
+          cpuRequestMillicores: 2000
+          cpuLimitMillicores: 4000
+        usage:
+          oomKillsLastWindow: 0
+          throttlingEventsLastWindow: 12
+          memory:
+            p50Mi: 680
+            p99Mi: 1580
+            avgUtilizationPercent: 27.3
+            p95Mi: 1120
+            maxMi: 2340
+          cpu:
+            maxMillicores: 1450
+            p95Millicores: 420
+            p50Millicores: 180
+            avgUtilizationPercent: 9.0
+            p99Millicores: 780
+        lastAnalyzedAt: 2000-01-23T04:56:07.000+00:00
+        workloadName: payment-processor
+        criticality: TIER_0
+        analysisWindowEnd: 2000-01-23T04:56:07.000+00:00
+        recommendation:
+          projectedSavings:
+            monthlySavingsUSD: 245.5
+            cpuSavedMillicores: 1500
+            savingsPercent: 62.5
+            assumption: Based on 3 replicas × $0.04/vCPU-hr + $0.005/GiB-hr for 730
+              hours.
+            yearlySavingsUSD: 2946.0
+            memorySavedMi: 2560
+          confidenceScore: 0.87
+          recommendedResources:
+            memoryRequestMi: 1536
+            memoryLimitMi: 2048
+            cpuRequestMillicores: 500
+            cpuLimitMillicores: 1000
+          changes:
+          - newValue: 500m
+            field: resources.requests.cpu
+            changeType: DECREASE
+            changePercent: -75.0
+            currentValue: 2000m
+          - newValue: 500m
+            field: resources.requests.cpu
+            changeType: DECREASE
+            changePercent: -75.0
+            currentValue: 2000m
+          generatedAt: 2000-01-23T04:56:07.000+00:00
+          alternatives:
+          - projectedMonthlySavingsUSD: 120.0
+            recommendedResources:
+              key: ""
+            description: "Conservative: keep memory at 2048Mi, reduce CPU only"
+            risk: SAFE
+          - projectedMonthlySavingsUSD: 120.0
+            recommendedResources:
+              key: ""
+            description: "Conservative: keep memory at 2048Mi, reduce CPU only"
+            risk: SAFE
+          recommendationId: b1a2c3d4-e5f6-7890-1234-567890abcdef
+          riskAssessment:
+            oomRiskReasoning: P99 memory is 1580Mi; recommended request 1536Mi will
+              OOM during peaks. Consider 2048Mi request.
+            performanceRiskReasoning: All criticality TIER_0 safety margins respected.
+            overallRisk: MEDIUM
+            oomRisk: MEDIUM
+            performanceRisk: LOW
+            throttlingRisk: LOW
+            throttlingRiskReasoning: P99 CPU 780m; limit 1000m provides 28% buffer.
+          rationale:
+          - P95 CPU usage is 420m; recommending 500m with 19% buffer.
+          - Peak CPU (1450m) occurs during hourly batch; limit set to 1000m may cause
+            throttling.
+          - Memory P99 is 1580Mi; recommending 1536Mi request risks OOM during peaks
+            — recommend 1536Mi.
+          expiresAt: 2026-11-12T14:30:00Z
+          status: PENDING
+        usageHistory:
+        - replicas: 3
+          cpuMillicores: 420
+          memoryMi: 1120
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - replicas: 3
+          cpuMillicores: 420
+          memoryMi: 1120
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        analysisWindowDays: 14
+        detectedWorkloadPattern: PERIODIC
+        containerName: payment-processor
+        workloadId: 9c8f1a3b-6d7e-4a12-8f5e-123456789abc
+        clusterName: prod-us-east-1
+        namespace: payments
+        analysisWindowStart: 2000-01-23T04:56:07.000+00:00
+        workloadType: DEPLOYMENT
+        status: RECOMMENDATION_READY
+      properties:
+        workloadId:
+          example: 9c8f1a3b-6d7e-4a12-8f5e-123456789abc
+          format: uuid
+          type: string
+        workloadName:
+          example: payment-processor
+          type: string
+        namespace:
+          example: payments
+          type: string
+        clusterName:
+          example: prod-us-east-1
+          type: string
+        workloadType:
+          enum:
+          - DEPLOYMENT
+          - STATEFULSET
+          - DAEMONSET
+          - CRONJOB
+          - JOB
+          example: DEPLOYMENT
+          type: string
+        containerName:
+          example: payment-processor
+          type: string
+        status:
+          enum:
+          - MONITORING
+          - ANALYZING
+          - RECOMMENDATION_READY
+          - APPLIED
+          - PAUSED
+          - ERROR
+          example: RECOMMENDATION_READY
+          type: string
+        owner:
+          example: payments-team
+          type: string
+        criticality:
+          enum:
+          - TIER_0
+          - TIER_1
+          - TIER_2
+          - TIER_3
+          example: TIER_0
+          type: string
+        analysisWindowDays:
+          example: 14
+          type: integer
+        detectedWorkloadPattern:
+          description: Auto-detected from historical usage.
+          enum:
+          - STEADY
+          - PERIODIC
+          - SPIKY
+          - BATCH
+          - SEASONAL
+          - UNKNOWN
+          example: PERIODIC
+          type: string
+        currentResources:
+          $ref: "#/components/schemas/Workload_currentResources"
+        usage:
+          $ref: "#/components/schemas/Workload_usage"
+        recommendation:
+          $ref: "#/components/schemas/Recommendation"
+        analysisWindowStart:
+          format: date-time
+          type: string
+        analysisWindowEnd:
+          format: date-time
+          type: string
+        usageHistory:
+          description: Hourly usage data points (if includeUsageHistory=true).
+          items:
+            $ref: "#/components/schemas/Workload_usageHistory_inner"
+          type: array
+        createdAt:
+          format: date-time
+          type: string
+        lastAnalyzedAt:
+          format: date-time
+          type: string
+        auditReference:
+          example: audit://rightsizer/workload-9c8f1a3b
+          type: string
+      required:
+      - clusterName
+      - containerName
+      - createdAt
+      - currentResources
+      - namespace
+      - owner
+      - status
+      - workloadId
+      - workloadName
+      - workloadType
+      type: object
+    Recommendation:
+      example:
+        projectedSavings:
+          monthlySavingsUSD: 245.5
+          cpuSavedMillicores: 1500
+          savingsPercent: 62.5
+          assumption: Based on 3 replicas × $0.04/vCPU-hr + $0.005/GiB-hr for 730
+            hours.
+          yearlySavingsUSD: 2946.0
+          memorySavedMi: 2560
+        confidenceScore: 0.87
+        recommendedResources:
+          memoryRequestMi: 1536
+          memoryLimitMi: 2048
+          cpuRequestMillicores: 500
+          cpuLimitMillicores: 1000
+        changes:
+        - newValue: 500m
+          field: resources.requests.cpu
+          changeType: DECREASE
+          changePercent: -75.0
+          currentValue: 2000m
+        - newValue: 500m
+          field: resources.requests.cpu
+          changeType: DECREASE
+          changePercent: -75.0
+          currentValue: 2000m
+        generatedAt: 2000-01-23T04:56:07.000+00:00
+        alternatives:
+        - projectedMonthlySavingsUSD: 120.0
+          recommendedResources:
+            key: ""
+          description: "Conservative: keep memory at 2048Mi, reduce CPU only"
+          risk: SAFE
+        - projectedMonthlySavingsUSD: 120.0
+          recommendedResources:
+            key: ""
+          description: "Conservative: keep memory at 2048Mi, reduce CPU only"
+          risk: SAFE
+        recommendationId: b1a2c3d4-e5f6-7890-1234-567890abcdef
+        riskAssessment:
+          oomRiskReasoning: P99 memory is 1580Mi; recommended request 1536Mi will
+            OOM during peaks. Consider 2048Mi request.
+          performanceRiskReasoning: All criticality TIER_0 safety margins respected.
+          overallRisk: MEDIUM
+          oomRisk: MEDIUM
+          performanceRisk: LOW
+          throttlingRisk: LOW
+          throttlingRiskReasoning: P99 CPU 780m; limit 1000m provides 28% buffer.
+        rationale:
+        - P95 CPU usage is 420m; recommending 500m with 19% buffer.
+        - Peak CPU (1450m) occurs during hourly batch; limit set to 1000m may cause
+          throttling.
+        - Memory P99 is 1580Mi; recommending 1536Mi request risks OOM during peaks
+          — recommend 1536Mi.
+        expiresAt: 2026-11-12T14:30:00Z
+        status: PENDING
+      properties:
+        recommendationId:
+          example: b1a2c3d4-e5f6-7890-1234-567890abcdef
+          format: uuid
+          type: string
+        status:
+          enum:
+          - PENDING
+          - APPLIED
+          - REJECTED
+          - STALE
+          - EXPIRED
+          example: PENDING
+          type: string
+        recommendedResources:
+          $ref: "#/components/schemas/Recommendation_recommendedResources"
+        changes:
+          description: What specifically changes (for transparency).
+          items:
+            $ref: "#/components/schemas/Recommendation_changes_inner"
+          type: array
+        rationale:
+          description: Why these values were chosen.
+          example:
+          - P95 CPU usage is 420m; recommending 500m with 19% buffer.
+          - Peak CPU (1450m) occurs during hourly batch; limit set to 1000m may cause
+            throttling.
+          - Memory P99 is 1580Mi; recommending 1536Mi request risks OOM during peaks
+            — recommend 1536Mi.
+          items:
+            type: string
+          type: array
+        projectedSavings:
+          $ref: "#/components/schemas/Recommendation_projectedSavings"
+        riskAssessment:
+          $ref: "#/components/schemas/Recommendation_riskAssessment"
+        confidenceScore:
+          description: Confidence in the recommendation (0-1).
+          example: 0.87
+          maximum: 1
+          minimum: 0
+          type: number
+        alternatives:
+          description: Alternative recommendations if the primary is rejected.
+          items:
+            $ref: "#/components/schemas/Recommendation_alternatives_inner"
+          type: array
+        generatedAt:
+          format: date-time
+          type: string
+        expiresAt:
+          description: Recommendations become STALE after this window.
+          example: 2026-11-12T14:30:00Z
+          format: date-time
+          type: string
+      required:
+      - changes
+      - generatedAt
+      - projectedSavings
+      - recommendationId
+      - recommendedResources
+      - riskAssessment
+      - status
+      type: object
+    AnalysisJob:
+      example:
+        jobId: c1a2c3d4-e5f6-7890-1234-567890abcdef
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        estimatedCompletionSeconds: 30
+        workloadId: 9c8f1a3b-6d7e-4a12-8f5e-123456789abc
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        progressPercent: 62
+        error: error
+        resultRecommendationId: b1a2c3d4-e5f6-7890-1234-567890abcdef
+        status: ANALYZING_USAGE
+      properties:
+        jobId:
+          example: c1a2c3d4-e5f6-7890-1234-567890abcdef
+          format: uuid
+          type: string
+        workloadId:
+          example: 9c8f1a3b-6d7e-4a12-8f5e-123456789abc
+          format: uuid
+          type: string
+        status:
+          enum:
+          - QUEUED
+          - COLLECTING_METRICS
+          - ANALYZING_USAGE
+          - GENERATING_RECOMMENDATION
+          - COMPLETED
+          - FAILED
+          example: ANALYZING_USAGE
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        completedAt:
+          format: date-time
+          type: string
+        progressPercent:
+          example: 62
+          type: integer
+        estimatedCompletionSeconds:
+          example: 30
+          type: integer
+        resultRecommendationId:
+          description: Populated on completion.
+          example: b1a2c3d4-e5f6-7890-1234-567890abcdef
+          format: uuid
+          type: string
+        error:
+          type: string
+      required:
+      - jobId
+      - startedAt
+      - status
+      - workloadId
+      type: object
+    RecommendationApply:
+      example:
+        auditReference: audit://rightsizer/apply-d1a2c3d4
+        completedAt: completedAt
+        afterResources:
+          key: ""
+        replicasUpdated: 1
+        replicasTotal: 3
+        postApplyMetrics:
+          avgCpuUtilizationPercent: 42.5
+          throttlingEventsObserved: 2
+          oomKillsObserved: 0
+          avgMemoryUtilizationPercent: 68.2
+          actualMonthlySavingsUSD: 238.4
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        recommendationId: b1a2c3d4-e5f6-7890-1234-567890abcdef
+        beforeResources:
+          key: ""
+        error: error
+        rollbackReason: rollbackReason
+        mode: STAGED
+        applyId: d1a2c3d4-e5f6-7890-1234-567890abcdef
+        monitoringUntil: 2026-11-06T14:30:00Z
+        workloadId: 9c8f1a3b-6d7e-4a12-8f5e-123456789abc
+        appliedBy: amit.kumar@forgesphere.example.com
+        status: MONITORING
+      properties:
+        applyId:
+          example: d1a2c3d4-e5f6-7890-1234-567890abcdef
+          format: uuid
+          type: string
+        recommendationId:
+          example: b1a2c3d4-e5f6-7890-1234-567890abcdef
+          format: uuid
+          type: string
+        workloadId:
+          example: 9c8f1a3b-6d7e-4a12-8f5e-123456789abc
+          format: uuid
+          type: string
+        mode:
+          enum:
+          - DRY_RUN
+          - STAGED
+          - IMMEDIATE
+          example: STAGED
+          type: string
+        status:
+          enum:
+          - QUEUED
+          - VALIDATING
+          - APPLYING
+          - MONITORING
+          - COMPLETED
+          - ROLLED_BACK
+          - FAILED
+          example: MONITORING
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        completedAt:
+          type: string
+        monitoringUntil:
+          description: End of auto-rollback monitoring window.
+          example: 2026-11-06T14:30:00Z
+          format: date-time
+          type: string
+        beforeResources:
+          additionalProperties: true
+          type: object
+        afterResources:
+          additionalProperties: true
+          type: object
+        replicasUpdated:
+          example: 1
+          type: integer
+        replicasTotal:
+          example: 3
+          type: integer
+        postApplyMetrics:
+          $ref: "#/components/schemas/RecommendationApply_postApplyMetrics"
+        rollbackReason:
+          type: string
+        error:
+          type: string
+        appliedBy:
+          example: amit.kumar@forgesphere.example.com
+          type: string
+        auditReference:
+          example: audit://rightsizer/apply-d1a2c3d4
+          type: string
+      required:
+      - applyId
+      - mode
+      - recommendationId
+      - startedAt
+      - status
+      - workloadId
+      type: object
+    WorkloadList:
+      example:
+        summary:
+          totalWorkloads: 247
+          oomRiskCount: 12
+          totalYearlySavingsOpportunityUSD: 149400.0
+          cpuWastePercentAvg: 62.5
+          memoryWastePercentAvg: 48.3
+          totalMonthlySavingsOpportunityUSD: 12450.0
+          workloadsWithRecommendation: 89
+        size: 20
+        totalPages: 13
+        page: 0
+        content:
+        - owner: payments-team
+          auditReference: audit://rightsizer/workload-9c8f1a3b
+          currentResources:
+            memoryRequestMi: 4096
+            memoryLimitMi: 8192
+            cpuRequestMillicores: 2000
+            cpuLimitMillicores: 4000
+          usage:
+            oomKillsLastWindow: 0
+            throttlingEventsLastWindow: 12
+            memory:
+              p50Mi: 680
+              p99Mi: 1580
+              avgUtilizationPercent: 27.3
+              p95Mi: 1120
+              maxMi: 2340
+            cpu:
+              maxMillicores: 1450
+              p95Millicores: 420
+              p50Millicores: 180
+              avgUtilizationPercent: 9.0
+              p99Millicores: 780
+          lastAnalyzedAt: 2000-01-23T04:56:07.000+00:00
+          workloadName: payment-processor
+          criticality: TIER_0
+          analysisWindowEnd: 2000-01-23T04:56:07.000+00:00
+          recommendation:
+            projectedSavings:
+              monthlySavingsUSD: 245.5
+              cpuSavedMillicores: 1500
+              savingsPercent: 62.5
+              assumption: Based on 3 replicas × $0.04/vCPU-hr + $0.005/GiB-hr for
+                730 hours.
+              yearlySavingsUSD: 2946.0
+              memorySavedMi: 2560
+            confidenceScore: 0.87
+            recommendedResources:
+              memoryRequestMi: 1536
+              memoryLimitMi: 2048
+              cpuRequestMillicores: 500
+              cpuLimitMillicores: 1000
+            changes:
+            - newValue: 500m
+              field: resources.requests.cpu
+              changeType: DECREASE
+              changePercent: -75.0
+              currentValue: 2000m
+            - newValue: 500m
+              field: resources.requests.cpu
+              changeType: DECREASE
+              changePercent: -75.0
+              currentValue: 2000m
+            generatedAt: 2000-01-23T04:56:07.000+00:00
+            alternatives:
+            - projectedMonthlySavingsUSD: 120.0
+              recommendedResources:
+                key: ""
+              description: "Conservative: keep memory at 2048Mi, reduce CPU only"
+              risk: SAFE
+            - projectedMonthlySavingsUSD: 120.0
+              recommendedResources:
+                key: ""
+              description: "Conservative: keep memory at 2048Mi, reduce CPU only"
+              risk: SAFE
+            recommendationId: b1a2c3d4-e5f6-7890-1234-567890abcdef
+            riskAssessment:
+              oomRiskReasoning: P99 memory is 1580Mi; recommended request 1536Mi will
+                OOM during peaks. Consider 2048Mi request.
+              performanceRiskReasoning: All criticality TIER_0 safety margins respected.
+              overallRisk: MEDIUM
+              oomRisk: MEDIUM
+              performanceRisk: LOW
+              throttlingRisk: LOW
+              throttlingRiskReasoning: P99 CPU 780m; limit 1000m provides 28% buffer.
+            rationale:
+            - P95 CPU usage is 420m; recommending 500m with 19% buffer.
+            - Peak CPU (1450m) occurs during hourly batch; limit set to 1000m may
+              cause throttling.
+            - Memory P99 is 1580Mi; recommending 1536Mi request risks OOM during peaks
+              — recommend 1536Mi.
+            expiresAt: 2026-11-12T14:30:00Z
+            status: PENDING
+          usageHistory:
+          - replicas: 3
+            cpuMillicores: 420
+            memoryMi: 1120
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          - replicas: 3
+            cpuMillicores: 420
+            memoryMi: 1120
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          analysisWindowDays: 14
+          detectedWorkloadPattern: PERIODIC
+          containerName: payment-processor
+          workloadId: 9c8f1a3b-6d7e-4a12-8f5e-123456789abc
+          clusterName: prod-us-east-1
+          namespace: payments
+          analysisWindowStart: 2000-01-23T04:56:07.000+00:00
+          workloadType: DEPLOYMENT
+          status: RECOMMENDATION_READY
+        - owner: payments-team
+          auditReference: audit://rightsizer/workload-9c8f1a3b
+          currentResources:
+            memoryRequestMi: 4096
+            memoryLimitMi: 8192
+            cpuRequestMillicores: 2000
+            cpuLimitMillicores: 4000
+          usage:
+            oomKillsLastWindow: 0
+            throttlingEventsLastWindow: 12
+            memory:
+              p50Mi: 680
+              p99Mi: 1580
+              avgUtilizationPercent: 27.3
+              p95Mi: 1120
+              maxMi: 2340
+            cpu:
+              maxMillicores: 1450
+              p95Millicores: 420
+              p50Millicores: 180
+              avgUtilizationPercent: 9.0
+              p99Millicores: 780
+          lastAnalyzedAt: 2000-01-23T04:56:07.000+00:00
+          workloadName: payment-processor
+          criticality: TIER_0
+          analysisWindowEnd: 2000-01-23T04:56:07.000+00:00
+          recommendation:
+            projectedSavings:
+              monthlySavingsUSD: 245.5
+              cpuSavedMillicores: 1500
+              savingsPercent: 62.5
+              assumption: Based on 3 replicas × $0.04/vCPU-hr + $0.005/GiB-hr for
+                730 hours.
+              yearlySavingsUSD: 2946.0
+              memorySavedMi: 2560
+            confidenceScore: 0.87
+            recommendedResources:
+              memoryRequestMi: 1536
+              memoryLimitMi: 2048
+              cpuRequestMillicores: 500
+              cpuLimitMillicores: 1000
+            changes:
+            - newValue: 500m
+              field: resources.requests.cpu
+              changeType: DECREASE
+              changePercent: -75.0
+              currentValue: 2000m
+            - newValue: 500m
+              field: resources.requests.cpu
+              changeType: DECREASE
+              changePercent: -75.0
+              currentValue: 2000m
+            generatedAt: 2000-01-23T04:56:07.000+00:00
+            alternatives:
+            - projectedMonthlySavingsUSD: 120.0
+              recommendedResources:
+                key: ""
+              description: "Conservative: keep memory at 2048Mi, reduce CPU only"
+              risk: SAFE
+            - projectedMonthlySavingsUSD: 120.0
+              recommendedResources:
+                key: ""
+              description: "Conservative: keep memory at 2048Mi, reduce CPU only"
+              risk: SAFE
+            recommendationId: b1a2c3d4-e5f6-7890-1234-567890abcdef
+            riskAssessment:
+              oomRiskReasoning: P99 memory is 1580Mi; recommended request 1536Mi will
+                OOM during peaks. Consider 2048Mi request.
+              performanceRiskReasoning: All criticality TIER_0 safety margins respected.
+              overallRisk: MEDIUM
+              oomRisk: MEDIUM
+              performanceRisk: LOW
+              throttlingRisk: LOW
+              throttlingRiskReasoning: P99 CPU 780m; limit 1000m provides 28% buffer.
+            rationale:
+            - P95 CPU usage is 420m; recommending 500m with 19% buffer.
+            - Peak CPU (1450m) occurs during hourly batch; limit set to 1000m may
+              cause throttling.
+            - Memory P99 is 1580Mi; recommending 1536Mi request risks OOM during peaks
+              — recommend 1536Mi.
+            expiresAt: 2026-11-12T14:30:00Z
+            status: PENDING
+          usageHistory:
+          - replicas: 3
+            cpuMillicores: 420
+            memoryMi: 1120
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          - replicas: 3
+            cpuMillicores: 420
+            memoryMi: 1120
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          analysisWindowDays: 14
+          detectedWorkloadPattern: PERIODIC
+          containerName: payment-processor
+          workloadId: 9c8f1a3b-6d7e-4a12-8f5e-123456789abc
+          clusterName: prod-us-east-1
+          namespace: payments
+          analysisWindowStart: 2000-01-23T04:56:07.000+00:00
+          workloadType: DEPLOYMENT
+          status: RECOMMENDATION_READY
+        totalElements: 247
+      properties:
+        content:
+          items:
+            $ref: "#/components/schemas/Workload"
+          type: array
+        totalElements:
+          example: 247
+          type: integer
+        totalPages:
+          example: 13
+          type: integer
+        page:
+          example: 0
+          type: integer
+        size:
+          example: 20
+          type: integer
+        summary:
+          $ref: "#/components/schemas/WorkloadList_summary"
+      required:
+      - content
+      - totalElements
+      - totalPages
+      type: object
+    ErrorResponse:
+      properties:
+        status:
+          example: 409
+          type: integer
+        errorCode:
+          example: RECOMMENDATION_STALE
+          type: string
+        message:
+          example: Recommendation is 15 days old; re-run analysis before applying.
+          type: string
+        timestamp:
+          format: date-time
+          type: string
+        path:
+          example: /v1/recommendations/b1a2c3d4/apply
+          type: string
+        serviceTransactionId:
+          example: 523f52b2-64a5-465e-b245-3efbe78f70ae
+          type: string
+      required:
+      - message
+      - path
+      - status
+      - timestamp
+      type: object
+    registerWorkload_request_minimumResources:
+      description: Absolute minimum (never go below).
+      properties:
+        cpuRequestMillicores:
+          example: 100
+          type: integer
+        memoryRequestMi:
+          example: 256
+          type: integer
+      type: object
+    registerWorkload_request_maximumResources:
+      description: Absolute maximum (never go above).
+      properties:
+        cpuRequestMillicores:
+          example: 4000
+          type: integer
+        memoryRequestMi:
+          example: 8192
+          type: integer
+      type: object
+    registerWorkload_request:
+      properties:
+        workloadName:
+          description: Name of the Kubernetes workload.
+          example: payment-processor
+          type: string
+        namespace:
+          example: payments
+          type: string
+        clusterName:
+          description: Kubernetes cluster identifier.
+          example: prod-us-east-1
+          type: string
+        workloadType:
+          enum:
+          - DEPLOYMENT
+          - STATEFULSET
+          - DAEMONSET
+          - CRONJOB
+          - JOB
+          example: DEPLOYMENT
+          type: string
+        containerName:
+          description: Specific container to right-size.
+          example: payment-processor
+          type: string
+        owner:
+          description: Team owning this workload.
+          example: payments-team
+          type: string
+        criticality:
+          description: Business criticality — drives safety margins.
+          enum:
+          - TIER_0
+          - TIER_1
+          - TIER_2
+          - TIER_3
+          example: TIER_0
+          type: string
+        analysisWindowDays:
+          default: 14
+          description: How much historical usage to analyze.
+          example: 14
+          maximum: 30
+          minimum: 3
+          type: integer
+        workloadPattern:
+          default: AUTO_DETECT
+          description: Expected pattern; affects safety margins.
+          enum:
+          - AUTO_DETECT
+          - STEADY
+          - PERIODIC
+          - SPIKY
+          - BATCH
+          - SEASONAL
+          example: PERIODIC
+          type: string
+        safetyMarginPercent:
+          default: 25
+          description: Buffer above P95 usage for recommendations.
+          example: 25
+          maximum: 100
+          minimum: 10
+          type: integer
+        minimumResources:
+          $ref: "#/components/schemas/registerWorkload_request_minimumResources"
+        maximumResources:
+          $ref: "#/components/schemas/registerWorkload_request_maximumResources"
+        autoApply:
+          default: false
+          description: "If true, apply recommendations automatically with rollback."
+          example: false
+          type: boolean
+        notifyChannels:
+          description: Channels for recommendation notifications.
+          example:
+          - SLACK
+          items:
+            enum:
+            - EMAIL
+            - SLACK
+            - WEBHOOK
+            type: string
+          type: array
+      required:
+      - clusterName
+      - containerName
+      - namespace
+      - owner
+      - workloadName
+      - workloadType
+      type: object
+    analyzeWorkload_request:
+      properties:
+        reason:
+          description: Why the analysis is being triggered (min 15 chars).
+          example: Traffic increased 3x after Diwali sale; re-checking sizing.
+          minLength: 15
+          type: string
+        overrideWindowDays:
+          description: Optional shorter/longer window for this analysis.
+          example: 7
+          maximum: 30
+          minimum: 1
+          type: integer
+        overrideSafetyMarginPercent:
+          description: Optional override for safety margin.
+          example: 40
+          maximum: 100
+          minimum: 10
+          type: integer
+        requestedBy:
+          example: amit.kumar@forgesphere.example.com
+          type: string
+      required:
+      - reason
+      type: object
+    applyRecommendation_request:
+      properties:
+        mode:
+          description: How to apply the recommendation.
+          enum:
+          - DRY_RUN
+          - STAGED
+          - IMMEDIATE
+          example: STAGED
+          type: string
+        reason:
+          description: Justification for the apply (min 15 chars).
+          example: CPU requests 4x over P95; safe to reduce with 25% buffer.
+          minLength: 15
+          type: string
+        appliedBy:
+          example: amit.kumar@forgesphere.example.com
+          type: string
+        autoRollbackOnOom:
+          default: true
+          description: Auto-rollback if OOMKills occur post-apply.
+          example: true
+          type: boolean
+        rollbackWindowHours:
+          default: 24
+          description: How long to monitor for regressions before finalizing.
+          example: 24
+          maximum: 72
+          minimum: 1
+          type: integer
+        notifyChannels:
+          example:
+          - SLACK
+          items:
+            enum:
+            - EMAIL
+            - SLACK
+            - WEBHOOK
+            type: string
+          type: array
+      required:
+      - mode
+      - reason
+      type: object
+    Workload_currentResources:
+      example:
+        memoryRequestMi: 4096
+        memoryLimitMi: 8192
+        cpuRequestMillicores: 2000
+        cpuLimitMillicores: 4000
+      properties:
+        cpuRequestMillicores:
+          example: 2000
+          type: integer
+        cpuLimitMillicores:
+          example: 4000
+          type: integer
+        memoryRequestMi:
+          example: 4096
+          type: integer
+        memoryLimitMi:
+          example: 8192
+          type: integer
+      required:
+      - cpuLimitMillicores
+      - cpuRequestMillicores
+      - memoryLimitMi
+      - memoryRequestMi
+      type: object
+    Workload_usage_cpu:
+      example:
+        maxMillicores: 1450
+        p95Millicores: 420
+        p50Millicores: 180
+        avgUtilizationPercent: 9.0
+        p99Millicores: 780
+      properties:
+        p50Millicores:
+          example: 180
+          type: integer
+        p95Millicores:
+          example: 420
+          type: integer
+        p99Millicores:
+          example: 780
+          type: integer
+        maxMillicores:
+          example: 1450
+          type: integer
+        avgUtilizationPercent:
+          description: Average usage vs current request.
+          example: 9.0
+          format: double
+          type: number
+      type: object
+    Workload_usage_memory:
+      example:
+        p50Mi: 680
+        p99Mi: 1580
+        avgUtilizationPercent: 27.3
+        p95Mi: 1120
+        maxMi: 2340
+      properties:
+        p50Mi:
+          example: 680
+          type: integer
+        p95Mi:
+          example: 1120
+          type: integer
+        p99Mi:
+          example: 1580
+          type: integer
+        maxMi:
+          example: 2340
+          type: integer
+        avgUtilizationPercent:
+          description: Average usage vs current request.
+          example: 27.3
+          format: double
+          type: number
+      type: object
+    Workload_usage:
+      description: Actual usage over the analysis window.
+      example:
+        oomKillsLastWindow: 0
+        throttlingEventsLastWindow: 12
+        memory:
+          p50Mi: 680
+          p99Mi: 1580
+          avgUtilizationPercent: 27.3
+          p95Mi: 1120
+          maxMi: 2340
+        cpu:
+          maxMillicores: 1450
+          p95Millicores: 420
+          p50Millicores: 180
+          avgUtilizationPercent: 9.0
+          p99Millicores: 780
+      properties:
+        cpu:
+          $ref: "#/components/schemas/Workload_usage_cpu"
+        memory:
+          $ref: "#/components/schemas/Workload_usage_memory"
+        oomKillsLastWindow:
+          description: OOMKill count in the analysis window.
+          example: 0
+          type: integer
+        throttlingEventsLastWindow:
+          description: CPU throttling events in the analysis window.
+          example: 12
+          type: integer
+      type: object
+    Workload_usageHistory_inner:
+      example:
+        replicas: 3
+        cpuMillicores: 420
+        memoryMi: 1120
+        timestamp: 2000-01-23T04:56:07.000+00:00
+      properties:
+        timestamp:
+          format: date-time
+          type: string
+        cpuMillicores:
+          example: 420
+          type: integer
+        memoryMi:
+          example: 1120
+          type: integer
+        replicas:
+          example: 3
+          type: integer
+      type: object
+    Recommendation_recommendedResources:
+      example:
+        memoryRequestMi: 1536
+        memoryLimitMi: 2048
+        cpuRequestMillicores: 500
+        cpuLimitMillicores: 1000
+      properties:
+        cpuRequestMillicores:
+          example: 500
+          type: integer
+        cpuLimitMillicores:
+          example: 1000
+          type: integer
+        memoryRequestMi:
+          example: 1536
+          type: integer
+        memoryLimitMi:
+          example: 2048
+          type: integer
+      required:
+      - cpuLimitMillicores
+      - cpuRequestMillicores
+      - memoryLimitMi
+      - memoryRequestMi
+      type: object
+    Recommendation_changes_inner:
+      example:
+        newValue: 500m
+        field: resources.requests.cpu
+        changeType: DECREASE
+        changePercent: -75.0
+        currentValue: 2000m
+      properties:
+        field:
+          example: resources.requests.cpu
+          type: string
+        currentValue:
+          example: 2000m
+          type: string
+        newValue:
+          example: 500m
+          type: string
+        changeType:
+          enum:
+          - DECREASE
+          - INCREASE
+          - NO_CHANGE
+          example: DECREASE
+          type: string
+        changePercent:
+          example: -75.0
+          format: double
+          type: number
+      type: object
+    Recommendation_projectedSavings:
+      example:
+        monthlySavingsUSD: 245.5
+        cpuSavedMillicores: 1500
+        savingsPercent: 62.5
+        assumption: Based on 3 replicas × $0.04/vCPU-hr + $0.005/GiB-hr for 730 hours.
+        yearlySavingsUSD: 2946.0
+        memorySavedMi: 2560
+      properties:
+        monthlySavingsUSD:
+          example: 245.5
+          format: double
+          type: number
+        yearlySavingsUSD:
+          example: 2946.0
+          format: double
+          type: number
+        cpuSavedMillicores:
+          example: 1500
+          type: integer
+        memorySavedMi:
+          example: 2560
+          type: integer
+        savingsPercent:
+          description: Cost reduction vs current.
+          example: 62.5
+          format: double
+          type: number
+        assumption:
+          example: Based on 3 replicas × $0.04/vCPU-hr + $0.005/GiB-hr for 730 hours.
+          type: string
+      required:
+      - cpuSavedMillicores
+      - memorySavedMi
+      - monthlySavingsUSD
+      - savingsPercent
+      type: object
+    Recommendation_riskAssessment:
+      example:
+        oomRiskReasoning: P99 memory is 1580Mi; recommended request 1536Mi will OOM
+          during peaks. Consider 2048Mi request.
+        performanceRiskReasoning: All criticality TIER_0 safety margins respected.
+        overallRisk: MEDIUM
+        oomRisk: MEDIUM
+        performanceRisk: LOW
+        throttlingRisk: LOW
+        throttlingRiskReasoning: P99 CPU 780m; limit 1000m provides 28% buffer.
+      properties:
+        overallRisk:
+          enum:
+          - SAFE
+          - LOW
+          - MEDIUM
+          - HIGH
+          example: MEDIUM
+          type: string
+        oomRisk:
+          description: Risk of OOMKill after change.
+          enum:
+          - NONE
+          - LOW
+          - MEDIUM
+          - HIGH
+          example: MEDIUM
+          type: string
+        oomRiskReasoning:
+          example: P99 memory is 1580Mi; recommended request 1536Mi will OOM during
+            peaks. Consider 2048Mi request.
+          type: string
+        throttlingRisk:
+          enum:
+          - NONE
+          - LOW
+          - MEDIUM
+          - HIGH
+          example: LOW
+          type: string
+        throttlingRiskReasoning:
+          example: P99 CPU 780m; limit 1000m provides 28% buffer.
+          type: string
+        performanceRisk:
+          enum:
+          - NONE
+          - LOW
+          - MEDIUM
+          - HIGH
+          example: LOW
+          type: string
+        performanceRiskReasoning:
+          example: All criticality TIER_0 safety margins respected.
+          type: string
+      required:
+      - oomRisk
+      - overallRisk
+      - performanceRisk
+      - throttlingRisk
+      type: object
+    Recommendation_alternatives_inner:
+      example:
+        projectedMonthlySavingsUSD: 120.0
+        recommendedResources:
+          key: ""
+        description: "Conservative: keep memory at 2048Mi, reduce CPU only"
+        risk: SAFE
+      properties:
+        description:
+          example: "Conservative: keep memory at 2048Mi, reduce CPU only"
+          type: string
+        recommendedResources:
+          additionalProperties: true
+          type: object
+        projectedMonthlySavingsUSD:
+          example: 120.0
+          format: double
+          type: number
+        risk:
+          enum:
+          - SAFE
+          - LOW
+          - MEDIUM
+          - HIGH
+          example: SAFE
+          type: string
+      type: object
+    RecommendationApply_postApplyMetrics:
+      description: Metrics observed during monitoring.
+      example:
+        avgCpuUtilizationPercent: 42.5
+        throttlingEventsObserved: 2
+        oomKillsObserved: 0
+        avgMemoryUtilizationPercent: 68.2
+        actualMonthlySavingsUSD: 238.4
+      properties:
+        oomKillsObserved:
+          example: 0
+          type: integer
+        throttlingEventsObserved:
+          example: 2
+          type: integer
+        avgCpuUtilizationPercent:
+          example: 42.5
+          format: double
+          type: number
+        avgMemoryUtilizationPercent:
+          example: 68.2
+          format: double
+          type: number
+        actualMonthlySavingsUSD:
+          description: Realized savings so far (extrapolated).
+          example: 238.4
+          format: double
+          type: number
+      type: object
+    WorkloadList_summary:
+      example:
+        totalWorkloads: 247
+        oomRiskCount: 12
+        totalYearlySavingsOpportunityUSD: 149400.0
+        cpuWastePercentAvg: 62.5
+        memoryWastePercentAvg: 48.3
+        totalMonthlySavingsOpportunityUSD: 12450.0
+        workloadsWithRecommendation: 89
+      properties:
+        totalWorkloads:
+          example: 247
+          type: integer
+        workloadsWithRecommendation:
+          example: 89
+          type: integer
+        oomRiskCount:
+          example: 12
+          type: integer
+        cpuWastePercentAvg:
+          example: 62.5
+          format: double
+          type: number
+        memoryWastePercentAvg:
+          example: 48.3
+          format: double
+          type: number
+        totalMonthlySavingsOpportunityUSD:
+          example: 12450.0
+          format: double
+          type: number
+        totalYearlySavingsOpportunityUSD:
+          example: 149400.0
+          format: double
+          type: number
+      type: object
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: JWT
+      description: JWT token issued to platform engineers or service owners.
+      scheme: bearer
+      type: http

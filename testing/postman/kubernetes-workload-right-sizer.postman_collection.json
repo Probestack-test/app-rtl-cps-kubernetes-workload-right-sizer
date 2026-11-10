@@ -1,0 +1,859 @@
+{
+  "info" : {
+    "_postman_id" : "1253e3d2-b032-48e3-bd35-4aab72d412df",
+    "name" : "Kubernetes Workload Right-Sizer",
+    "description" : "Generated Postman collection for kubernetes-workload-right-sizer",
+    "schema" : "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable" : [ {
+    "key" : "baseUrl",
+    "value" : "http://localhost:8080",
+    "type" : "string"
+  }, {
+    "key" : "bearerToken",
+    "value" : "",
+    "type" : "string"
+  }, {
+    "key" : "resourceId",
+    "value" : "sample-id",
+    "type" : "string"
+  }, {
+    "key" : "clientId",
+    "value" : "generated-service-client",
+    "type" : "string"
+  }, {
+    "key" : "clientSecret",
+    "value" : "change-me",
+    "type" : "string"
+  }, {
+    "key" : "scope",
+    "value" : "api.read api.write",
+    "type" : "string"
+  } ],
+  "item" : [ {
+    "name" : "Health",
+    "item" : [ {
+      "name" : "Health",
+      "request" : {
+        "auth" : {
+          "type" : "noauth"
+        },
+        "method" : "GET",
+        "header" : [ {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/actuator/health",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "actuator", "health" ]
+        }
+      },
+      "response" : [ {
+        "name" : "OK",
+        "originalRequest" : {
+          "auth" : {
+            "type" : "noauth"
+          },
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/actuator/health",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "actuator", "health" ]
+          }
+        },
+        "status" : "OK",
+        "code" : 200,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"status\" : \"UP\"\n}"
+      } ]
+    }, {
+      "name" : "Liveness",
+      "request" : {
+        "auth" : {
+          "type" : "noauth"
+        },
+        "method" : "GET",
+        "header" : [ {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/actuator/health/liveness",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "actuator", "health", "liveness" ]
+        }
+      },
+      "response" : [ {
+        "name" : "OK",
+        "originalRequest" : {
+          "auth" : {
+            "type" : "noauth"
+          },
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/actuator/health/liveness",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "actuator", "health", "liveness" ]
+          }
+        },
+        "status" : "OK",
+        "code" : 200,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"status\" : \"UP\"\n}"
+      } ]
+    }, {
+      "name" : "Readiness",
+      "request" : {
+        "auth" : {
+          "type" : "noauth"
+        },
+        "method" : "GET",
+        "header" : [ {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/actuator/health/readiness",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "actuator", "health", "readiness" ]
+        }
+      },
+      "response" : [ {
+        "name" : "OK",
+        "originalRequest" : {
+          "auth" : {
+            "type" : "noauth"
+          },
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/actuator/health/readiness",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "actuator", "health", "readiness" ]
+          }
+        },
+        "status" : "OK",
+        "code" : 200,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"status\" : \"UP\"\n}"
+      } ]
+    }, {
+      "name" : "Metrics",
+      "request" : {
+        "auth" : {
+          "type" : "noauth"
+        },
+        "method" : "GET",
+        "header" : [ {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/actuator/metrics",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "actuator", "metrics" ]
+        }
+      },
+      "response" : [ {
+        "name" : "OK",
+        "originalRequest" : {
+          "auth" : {
+            "type" : "noauth"
+          },
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/actuator/metrics",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "actuator", "metrics" ]
+          }
+        },
+        "status" : "OK",
+        "code" : 200,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"status\" : \"UP\"\n}"
+      } ]
+    }, {
+      "name" : "Prometheus",
+      "request" : {
+        "auth" : {
+          "type" : "noauth"
+        },
+        "method" : "GET",
+        "header" : [ {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/actuator/prometheus",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "actuator", "prometheus" ]
+        }
+      },
+      "response" : [ {
+        "name" : "OK",
+        "originalRequest" : {
+          "auth" : {
+            "type" : "noauth"
+          },
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/actuator/prometheus",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "actuator", "prometheus" ]
+          }
+        },
+        "status" : "OK",
+        "code" : 200,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"status\" : \"UP\"\n}"
+      } ]
+    } ]
+  }, {
+    "name" : "Security",
+    "item" : [ {
+      "name" : "Get OAuth2 Token",
+      "request" : {
+        "auth" : {
+          "type" : "basic",
+          "basic" : [ {
+            "key" : "username",
+            "value" : "{{clientId}}",
+            "type" : "string"
+          }, {
+            "key" : "password",
+            "value" : "{{clientSecret}}",
+            "type" : "string"
+          } ]
+        },
+        "method" : "POST",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/x-www-form-urlencoded"
+        }, {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "body" : {
+          "mode" : "urlencoded",
+          "urlencoded" : [ {
+            "key" : "grant_type",
+            "value" : "client_credentials",
+            "type" : "text"
+          }, {
+            "key" : "scope",
+            "value" : "{{scope}}",
+            "type" : "text"
+          } ]
+        },
+        "url" : {
+          "raw" : "{{baseUrl}}/oauth2/token",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "oauth2", "token" ]
+        }
+      },
+      "event" : [ {
+        "listen" : "test",
+        "script" : {
+          "type" : "text/javascript",
+          "exec" : [ "const json = pm.response.json();", "if (json.access_token) {", "  pm.collectionVariables.set(\"bearerToken\", json.access_token);", "}" ]
+        }
+      } ]
+    } ]
+  }, {
+    "name" : "Workloads",
+    "item" : [ {
+      "name" : "List registered workloads",
+      "request" : {
+        "method" : "GET",
+        "header" : [ {
+          "key" : "Authorization",
+          "value" : "Bearer {{bearerToken}}"
+        }, {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/workloads?clusterName=prod-us-east-1&namespace=payments&owner=payments-team&criticality=TIER_0&hasActiveRecommendation=true&sortBy=POTENTIAL_SAVINGS&page=1&size=1",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "workloads" ],
+          "query" : [ {
+            "key" : "clusterName",
+            "value" : "prod-us-east-1"
+          }, {
+            "key" : "namespace",
+            "value" : "payments"
+          }, {
+            "key" : "owner",
+            "value" : "payments-team"
+          }, {
+            "key" : "criticality",
+            "value" : "TIER_0"
+          }, {
+            "key" : "hasActiveRecommendation",
+            "value" : true
+          }, {
+            "key" : "sortBy",
+            "value" : "POTENTIAL_SAVINGS"
+          }, {
+            "key" : "page",
+            "value" : 1
+          }, {
+            "key" : "size",
+            "value" : 1
+          } ]
+        }
+      },
+      "response" : [ {
+        "name" : "OK",
+        "originalRequest" : {
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/workloads?clusterName=prod-us-east-1&namespace=payments&owner=payments-team&criticality=TIER_0&hasActiveRecommendation=true&sortBy=POTENTIAL_SAVINGS&page=1&size=1",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "workloads" ],
+            "query" : [ {
+              "key" : "clusterName",
+              "value" : "prod-us-east-1"
+            }, {
+              "key" : "namespace",
+              "value" : "payments"
+            }, {
+              "key" : "owner",
+              "value" : "payments-team"
+            }, {
+              "key" : "criticality",
+              "value" : "TIER_0"
+            }, {
+              "key" : "hasActiveRecommendation",
+              "value" : true
+            }, {
+              "key" : "sortBy",
+              "value" : "POTENTIAL_SAVINGS"
+            }, {
+              "key" : "page",
+              "value" : 1
+            }, {
+              "key" : "size",
+              "value" : 1
+            } ]
+          }
+        },
+        "status" : "OK",
+        "code" : 200,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"content\" : [ {\n    \"owner\" : \"payments-team\",\n    \"auditReference\" : \"audit://rightsizer/workload-9c8f1a3b\",\n    \"currentResources\" : {\n      \"memoryRequestMi\" : 4096,\n      \"memoryLimitMi\" : 8192,\n      \"cpuRequestMillicores\" : 2000,\n      \"cpuLimitMillicores\" : 4000\n    },\n    \"usage\" : {\n      \"oomKillsLastWindow\" : 0,\n      \"throttlingEventsLastWindow\" : 12,\n      \"memory\" : {\n        \"p50Mi\" : 680,\n        \"p99Mi\" : 1580,\n        \"avgUtilizationPercent\" : 27.3,\n        \"p95Mi\" : 1120,\n        \"maxMi\" : 2340\n      },\n      \"cpu\" : {\n        \"maxMillicores\" : 1450,\n        \"p95Millicores\" : 420,\n        \"p50Millicores\" : 180,\n        \"avgUtilizationPercent\" : 9.0,\n        \"p99Millicores\" : 780\n      }\n    },\n    \"lastAnalyzedAt\" : 948603367000,\n    \"workloadName\" : \"payment-processor\",\n    \"criticality\" : \"TIER_0\",\n    \"analysisWindowEnd\" : 948603367000,\n    \"recommendation\" : {\n      \"projectedSavings\" : {\n        \"monthlySavingsUSD\" : 245.5,\n        \"cpuSavedMillicores\" : 1500,\n        \"savingsPercent\" : 62.5,\n        \"assumption\" : \"Based on 3 replicas × $0.04/vCPU-hr + $0.005/GiB-hr for 730 hours.\",\n        \"yearlySavingsUSD\" : 2946.0,\n        \"memorySavedMi\" : 2560\n      },\n      \"confidenceScore\" : 0.87,\n      \"recommendedResources\" : {\n        \"memoryRequestMi\" : 1536,\n        \"memoryLimitMi\" : 2048,\n        \"cpuRequestMillicores\" : 500,\n        \"cpuLimitMillicores\" : 1000\n      },\n      \"changes\" : [ {\n        \"newValue\" : \"500m\",\n        \"field\" : \"resources.requests.cpu\",\n        \"changeType\" : \"DECREASE\",\n        \"changePercent\" : -75.0,\n        \"currentValue\" : \"2000m\"\n      }, {\n        \"newValue\" : \"500m\",\n        \"field\" : \"resources.requests.cpu\",\n        \"changeType\" : \"DECREASE\",\n        \"changePercent\" : -75.0,\n        \"currentValue\" : \"2000m\"\n      } ],\n      \"generatedAt\" : 948603367000,\n      \"alternatives\" : [ {\n        \"projectedMonthlySavingsUSD\" : 120.0,\n        \"recommendedResources\" : {\n          \"key\" : \"\"\n        },\n        \"description\" : \"Conservative: keep memory at 2048Mi, reduce CPU only\",\n        \"risk\" : \"SAFE\"\n      }, {\n        \"projectedMonthlySavingsUSD\" : 120.0,\n        \"recommendedResources\" : {\n          \"key\" : \"\"\n        },\n        \"description\" : \"Conservative: keep memory at 2048Mi, reduce CPU only\",\n        \"risk\" : \"SAFE\"\n      } ],\n      \"recommendationId\" : \"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\n      \"riskAssessment\" : {\n        \"oomRiskReasoning\" : \"P99 memory is 1580Mi; recommended request 1536Mi will OOM during peaks. Consider 2048Mi request.\",\n        \"performanceRiskReasoning\" : \"All criticality TIER_0 safety margins respected.\",\n        \"overallRisk\" : \"MEDIUM\",\n        \"oomRisk\" : \"MEDIUM\",\n        \"performanceRisk\" : \"LOW\",\n        \"throttlingRisk\" : \"LOW\",\n        \"throttlingRiskReasoning\" : \"P99 CPU 780m; limit 1000m provides 28% buffer.\"\n      },\n      \"rationale\" : [ \"P95 CPU usage is 420m; recommending 500m with 19% buffer.\", \"Peak CPU (1450m) occurs during hourly batch; limit set to 1000m may cause throttling.\", \"Memory P99 is 1580Mi; recommending 1536Mi request risks OOM during peaks — recommend 1536Mi.\" ],\n      \"expiresAt\" : 1794493800000,\n      \"status\" : \"PENDING\"\n    },\n    \"usageHistory\" : [ {\n      \"replicas\" : 3,\n      \"cpuMillicores\" : 420,\n      \"memoryMi\" : 1120,\n      \"timestamp\" : 948603367000\n    }, {\n      \"replicas\" : 3,\n      \"cpuMillicores\" : 420,\n      \"memoryMi\" : 1120,\n      \"timestamp\" : 948603367000\n    } ],\n    \"createdAt\" : 948603367000,\n    \"analysisWindowDays\" : 14,\n    \"detectedWorkloadPattern\" : \"PERIODIC\",\n    \"containerName\" : \"payment-processor\",\n    \"workloadId\" : \"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\n    \"clusterName\" : \"prod-us-east-1\",\n    \"namespace\" : \"payments\",\n    \"analysisWindowStart\" : 948603367000,\n    \"workloadType\" : \"DEPLOYMENT\",\n    \"status\" : \"RECOMMENDATION_READY\"\n  }, {\n    \"owner\" : \"payments-team\",\n    \"auditReference\" : \"audit://rightsizer/workload-9c8f1a3b\",\n    \"currentResources\" : {\n      \"memoryRequestMi\" : 4096,\n      \"memoryLimitMi\" : 8192,\n      \"cpuRequestMillicores\" : 2000,\n      \"cpuLimitMillicores\" : 4000\n    },\n    \"usage\" : {\n      \"oomKillsLastWindow\" : 0,\n      \"throttlingEventsLastWindow\" : 12,\n      \"memory\" : {\n        \"p50Mi\" : 680,\n        \"p99Mi\" : 1580,\n        \"avgUtilizationPercent\" : 27.3,\n        \"p95Mi\" : 1120,\n        \"maxMi\" : 2340\n      },\n      \"cpu\" : {\n        \"maxMillicores\" : 1450,\n        \"p95Millicores\" : 420,\n        \"p50Millicores\" : 180,\n        \"avgUtilizationPercent\" : 9.0,\n        \"p99Millicores\" : 780\n      }\n    },\n    \"lastAnalyzedAt\" : 948603367000,\n    \"workloadName\" : \"payment-processor\",\n    \"criticality\" : \"TIER_0\",\n    \"analysisWindowEnd\" : 948603367000,\n    \"recommendation\" : {\n      \"projectedSavings\" : {\n        \"monthlySavingsUSD\" : 245.5,\n        \"cpuSavedMillicores\" : 1500,\n        \"savingsPercent\" : 62.5,\n        \"assumption\" : \"Based on 3 replicas × $0.04/vCPU-hr + $0.005/GiB-hr for 730 hours.\",\n        \"yearlySavingsUSD\" : 2946.0,\n        \"memorySavedMi\" : 2560\n      },\n      \"confidenceScore\" : 0.87,\n      \"recommendedResources\" : {\n        \"memoryRequestMi\" : 1536,\n        \"memoryLimitMi\" : 2048,\n        \"cpuRequestMillicores\" : 500,\n        \"cpuLimitMillicores\" : 1000\n      },\n      \"changes\" : [ {\n        \"newValue\" : \"500m\",\n        \"field\" : \"resources.requests.cpu\",\n        \"changeType\" : \"DECREASE\",\n        \"changePercent\" : -75.0,\n        \"currentValue\" : \"2000m\"\n      }, {\n        \"newValue\" : \"500m\",\n        \"field\" : \"resources.requests.cpu\",\n        \"changeType\" : \"DECREASE\",\n        \"changePercent\" : -75.0,\n        \"currentValue\" : \"2000m\"\n      } ],\n      \"generatedAt\" : 948603367000,\n      \"alternatives\" : [ {\n        \"projectedMonthlySavingsUSD\" : 120.0,\n        \"recommendedResources\" : {\n          \"key\" : \"\"\n        },\n        \"description\" : \"Conservative: keep memory at 2048Mi, reduce CPU only\",\n        \"risk\" : \"SAFE\"\n      }, {\n        \"projectedMonthlySavingsUSD\" : 120.0,\n        \"recommendedResources\" : {\n          \"key\" : \"\"\n        },\n        \"description\" : \"Conservative: keep memory at 2048Mi, reduce CPU only\",\n        \"risk\" : \"SAFE\"\n      } ],\n      \"recommendationId\" : \"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\n      \"riskAssessment\" : {\n        \"oomRiskReasoning\" : \"P99 memory is 1580Mi; recommended request 1536Mi will OOM during peaks. Consider 2048Mi request.\",\n        \"performanceRiskReasoning\" : \"All criticality TIER_0 safety margins respected.\",\n        \"overallRisk\" : \"MEDIUM\",\n        \"oomRisk\" : \"MEDIUM\",\n        \"performanceRisk\" : \"LOW\",\n        \"throttlingRisk\" : \"LOW\",\n        \"throttlingRiskReasoning\" : \"P99 CPU 780m; limit 1000m provides 28% buffer.\"\n      },\n      \"rationale\" : [ \"P95 CPU usage is 420m; recommending 500m with 19% buffer.\", \"Peak CPU (1450m) occurs during hourly batch; limit set to 1000m may cause throttling.\", \"Memory P99 is 1580Mi; recommending 1536Mi request risks OOM during peaks — recommend 1536Mi.\" ],\n      \"expiresAt\" : 1794493800000,\n      \"status\" : \"PENDING\"\n    },\n    \"usageHistory\" : [ {\n      \"replicas\" : 3,\n      \"cpuMillicores\" : 420,\n      \"memoryMi\" : 1120,\n      \"timestamp\" : 948603367000\n    }, {\n      \"replicas\" : 3,\n      \"cpuMillicores\" : 420,\n      \"memoryMi\" : 1120,\n      \"timestamp\" : 948603367000\n    } ],\n    \"createdAt\" : 948603367000,\n    \"analysisWindowDays\" : 14,\n    \"detectedWorkloadPattern\" : \"PERIODIC\",\n    \"containerName\" : \"payment-processor\",\n    \"workloadId\" : \"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\n    \"clusterName\" : \"prod-us-east-1\",\n    \"namespace\" : \"payments\",\n    \"analysisWindowStart\" : 948603367000,\n    \"workloadType\" : \"DEPLOYMENT\",\n    \"status\" : \"RECOMMENDATION_READY\"\n  } ],\n  \"totalElements\" : 247,\n  \"totalPages\" : 13,\n  \"page\" : 0,\n  \"size\" : 20,\n  \"summary\" : {\n    \"totalWorkloads\" : 247,\n    \"oomRiskCount\" : 12,\n    \"totalYearlySavingsOpportunityUSD\" : 149400.0,\n    \"cpuWastePercentAvg\" : 62.5,\n    \"memoryWastePercentAvg\" : 48.3,\n    \"totalMonthlySavingsOpportunityUSD\" : 12450.0,\n    \"workloadsWithRecommendation\" : 89\n  }\n}"
+      }, {
+        "name" : "Bad Request",
+        "originalRequest" : {
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/workloads?clusterName=prod-us-east-1&namespace=payments&owner=payments-team&criticality=TIER_0&hasActiveRecommendation=true&sortBy=POTENTIAL_SAVINGS&page=1&size=1",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "workloads" ],
+            "query" : [ {
+              "key" : "clusterName",
+              "value" : "prod-us-east-1"
+            }, {
+              "key" : "namespace",
+              "value" : "payments"
+            }, {
+              "key" : "owner",
+              "value" : "payments-team"
+            }, {
+              "key" : "criticality",
+              "value" : "TIER_0"
+            }, {
+              "key" : "hasActiveRecommendation",
+              "value" : true
+            }, {
+              "key" : "sortBy",
+              "value" : "POTENTIAL_SAVINGS"
+            }, {
+              "key" : "page",
+              "value" : 1
+            }, {
+              "key" : "size",
+              "value" : 1
+            } ]
+          }
+        },
+        "status" : "Bad Request",
+        "code" : 400,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"timestamp\" : \"2026-11-10T15:53:14.935888167Z\",\n  \"status\" : 400,\n  \"code\" : \"request_failed\",\n  \"userMessage\" : \"Request failed\",\n  \"systemMessage\" : \"Sample error for documentation purposes\",\n  \"path\" : \"{{baseUrl}}\",\n  \"correlationId\" : \"sample-correlation-id\"\n}"
+      } ]
+    }, {
+      "name" : "Register a Kubernetes workload for right-sizing analysis",
+      "request" : {
+        "method" : "POST",
+        "header" : [ {
+          "key" : "Authorization",
+          "value" : "Bearer {{bearerToken}}"
+        }, {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        }, {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/workloads",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "workloads" ]
+        },
+        "body" : {
+          "mode" : "raw",
+          "raw" : "{\n  \"workloadName\" : \"payment-processor\",\n  \"namespace\" : \"payments\",\n  \"clusterName\" : \"prod-us-east-1\",\n  \"workloadType\" : \"DEPLOYMENT\",\n  \"containerName\" : \"payment-processor\",\n  \"owner\" : \"payments-team\",\n  \"criticality\" : \"TIER_0\",\n  \"analysisWindowDays\" : 14,\n  \"workloadPattern\" : \"PERIODIC\",\n  \"safetyMarginPercent\" : 25,\n  \"minimumResources\" : {\n    \"cpuRequestMillicores\" : 100,\n    \"memoryRequestMi\" : 256\n  },\n  \"maximumResources\" : {\n    \"cpuRequestMillicores\" : 4000,\n    \"memoryRequestMi\" : 8192\n  },\n  \"autoApply\" : false,\n  \"notifyChannels\" : [ \"SLACK\" ]\n}",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
+        }
+      },
+      "response" : [ {
+        "name" : "Created",
+        "originalRequest" : {
+          "method" : "POST",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Content-Type",
+            "value" : "application/json"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/workloads",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "workloads" ]
+          },
+          "body" : {
+            "mode" : "raw",
+            "raw" : "{\n  \"workloadName\" : \"payment-processor\",\n  \"namespace\" : \"payments\",\n  \"clusterName\" : \"prod-us-east-1\",\n  \"workloadType\" : \"DEPLOYMENT\",\n  \"containerName\" : \"payment-processor\",\n  \"owner\" : \"payments-team\",\n  \"criticality\" : \"TIER_0\",\n  \"analysisWindowDays\" : 14,\n  \"workloadPattern\" : \"PERIODIC\",\n  \"safetyMarginPercent\" : 25,\n  \"minimumResources\" : {\n    \"cpuRequestMillicores\" : 100,\n    \"memoryRequestMi\" : 256\n  },\n  \"maximumResources\" : {\n    \"cpuRequestMillicores\" : 4000,\n    \"memoryRequestMi\" : 8192\n  },\n  \"autoApply\" : false,\n  \"notifyChannels\" : [ \"SLACK\" ]\n}",
+            "options" : {
+              "raw" : {
+                "language" : "json"
+              }
+            }
+          }
+        },
+        "status" : "Created",
+        "code" : 201,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"workloadId\" : \"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\n  \"workloadName\" : \"payment-processor\",\n  \"namespace\" : \"payments\",\n  \"clusterName\" : \"prod-us-east-1\",\n  \"workloadType\" : \"DEPLOYMENT\",\n  \"containerName\" : \"payment-processor\",\n  \"status\" : \"RECOMMENDATION_READY\",\n  \"owner\" : \"payments-team\",\n  \"criticality\" : \"TIER_0\",\n  \"analysisWindowDays\" : 14,\n  \"detectedWorkloadPattern\" : \"PERIODIC\",\n  \"currentResources\" : {\n    \"memoryRequestMi\" : 4096,\n    \"memoryLimitMi\" : 8192,\n    \"cpuRequestMillicores\" : 2000,\n    \"cpuLimitMillicores\" : 4000\n  },\n  \"usage\" : {\n    \"oomKillsLastWindow\" : 0,\n    \"throttlingEventsLastWindow\" : 12,\n    \"memory\" : {\n      \"p50Mi\" : 680,\n      \"p99Mi\" : 1580,\n      \"avgUtilizationPercent\" : 27.3,\n      \"p95Mi\" : 1120,\n      \"maxMi\" : 2340\n    },\n    \"cpu\" : {\n      \"maxMillicores\" : 1450,\n      \"p95Millicores\" : 420,\n      \"p50Millicores\" : 180,\n      \"avgUtilizationPercent\" : 9.0,\n      \"p99Millicores\" : 780\n    }\n  },\n  \"recommendation\" : {\n    \"projectedSavings\" : {\n      \"monthlySavingsUSD\" : 245.5,\n      \"cpuSavedMillicores\" : 1500,\n      \"savingsPercent\" : 62.5,\n      \"assumption\" : \"Based on 3 replicas × $0.04/vCPU-hr + $0.005/GiB-hr for 730 hours.\",\n      \"yearlySavingsUSD\" : 2946.0,\n      \"memorySavedMi\" : 2560\n    },\n    \"confidenceScore\" : 0.87,\n    \"recommendedResources\" : {\n      \"memoryRequestMi\" : 1536,\n      \"memoryLimitMi\" : 2048,\n      \"cpuRequestMillicores\" : 500,\n      \"cpuLimitMillicores\" : 1000\n    },\n    \"changes\" : [ {\n      \"newValue\" : \"500m\",\n      \"field\" : \"resources.requests.cpu\",\n      \"changeType\" : \"DECREASE\",\n      \"changePercent\" : -75.0,\n      \"currentValue\" : \"2000m\"\n    }, {\n      \"newValue\" : \"500m\",\n      \"field\" : \"resources.requests.cpu\",\n      \"changeType\" : \"DECREASE\",\n      \"changePercent\" : -75.0,\n      \"currentValue\" : \"2000m\"\n    } ],\n    \"generatedAt\" : 948603367000,\n    \"alternatives\" : [ {\n      \"projectedMonthlySavingsUSD\" : 120.0,\n      \"recommendedResources\" : {\n        \"key\" : \"\"\n      },\n      \"description\" : \"Conservative: keep memory at 2048Mi, reduce CPU only\",\n      \"risk\" : \"SAFE\"\n    }, {\n      \"projectedMonthlySavingsUSD\" : 120.0,\n      \"recommendedResources\" : {\n        \"key\" : \"\"\n      },\n      \"description\" : \"Conservative: keep memory at 2048Mi, reduce CPU only\",\n      \"risk\" : \"SAFE\"\n    } ],\n    \"recommendationId\" : \"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\n    \"riskAssessment\" : {\n      \"oomRiskReasoning\" : \"P99 memory is 1580Mi; recommended request 1536Mi will OOM during peaks. Consider 2048Mi request.\",\n      \"performanceRiskReasoning\" : \"All criticality TIER_0 safety margins respected.\",\n      \"overallRisk\" : \"MEDIUM\",\n      \"oomRisk\" : \"MEDIUM\",\n      \"performanceRisk\" : \"LOW\",\n      \"throttlingRisk\" : \"LOW\",\n      \"throttlingRiskReasoning\" : \"P99 CPU 780m; limit 1000m provides 28% buffer.\"\n    },\n    \"rationale\" : [ \"P95 CPU usage is 420m; recommending 500m with 19% buffer.\", \"Peak CPU (1450m) occurs during hourly batch; limit set to 1000m may cause throttling.\", \"Memory P99 is 1580Mi; recommending 1536Mi request risks OOM during peaks — recommend 1536Mi.\" ],\n    \"expiresAt\" : 1794493800000,\n    \"status\" : \"PENDING\"\n  },\n  \"analysisWindowStart\" : 948603367000,\n  \"analysisWindowEnd\" : 948603367000,\n  \"usageHistory\" : [ {\n    \"replicas\" : 3,\n    \"cpuMillicores\" : 420,\n    \"memoryMi\" : 1120,\n    \"timestamp\" : 948603367000\n  }, {\n    \"replicas\" : 3,\n    \"cpuMillicores\" : 420,\n    \"memoryMi\" : 1120,\n    \"timestamp\" : 948603367000\n  } ],\n  \"createdAt\" : 948603367000,\n  \"lastAnalyzedAt\" : 948603367000,\n  \"auditReference\" : \"audit://rightsizer/workload-9c8f1a3b\"\n}"
+      }, {
+        "name" : "Bad Request",
+        "originalRequest" : {
+          "method" : "POST",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Content-Type",
+            "value" : "application/json"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/workloads",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "workloads" ]
+          },
+          "body" : {
+            "mode" : "raw",
+            "raw" : "{\n  \"workloadName\" : \"payment-processor\",\n  \"namespace\" : \"payments\",\n  \"clusterName\" : \"prod-us-east-1\",\n  \"workloadType\" : \"DEPLOYMENT\",\n  \"containerName\" : \"payment-processor\",\n  \"owner\" : \"payments-team\",\n  \"criticality\" : \"TIER_0\",\n  \"analysisWindowDays\" : 14,\n  \"workloadPattern\" : \"PERIODIC\",\n  \"safetyMarginPercent\" : 25,\n  \"minimumResources\" : {\n    \"cpuRequestMillicores\" : 100,\n    \"memoryRequestMi\" : 256\n  },\n  \"maximumResources\" : {\n    \"cpuRequestMillicores\" : 4000,\n    \"memoryRequestMi\" : 8192\n  },\n  \"autoApply\" : false,\n  \"notifyChannels\" : [ \"SLACK\" ]\n}",
+            "options" : {
+              "raw" : {
+                "language" : "json"
+              }
+            }
+          }
+        },
+        "status" : "Bad Request",
+        "code" : 400,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"timestamp\" : \"2026-11-10T15:53:14.937060318Z\",\n  \"status\" : 400,\n  \"code\" : \"request_failed\",\n  \"userMessage\" : \"Request failed\",\n  \"systemMessage\" : \"Sample error for documentation purposes\",\n  \"path\" : \"{{baseUrl}}\",\n  \"correlationId\" : \"sample-correlation-id\"\n}"
+      } ]
+    }, {
+      "name" : "Get detailed workload analysis with recommendations",
+      "request" : {
+        "method" : "GET",
+        "header" : [ {
+          "key" : "Authorization",
+          "value" : "Bearer {{bearerToken}}"
+        }, {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/workloads/9c8f1a3b-6d7e-4a12-8f5e-123456789abc?includeUsageHistory=true",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "workloads", "9c8f1a3b-6d7e-4a12-8f5e-123456789abc" ],
+          "query" : [ {
+            "key" : "includeUsageHistory",
+            "value" : true
+          } ]
+        }
+      },
+      "response" : [ {
+        "name" : "OK",
+        "originalRequest" : {
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/workloads/9c8f1a3b-6d7e-4a12-8f5e-123456789abc?includeUsageHistory=true",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "workloads", "9c8f1a3b-6d7e-4a12-8f5e-123456789abc" ],
+            "query" : [ {
+              "key" : "includeUsageHistory",
+              "value" : true
+            } ]
+          }
+        },
+        "status" : "OK",
+        "code" : 200,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"workloadId\" : \"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\n  \"workloadName\" : \"payment-processor\",\n  \"namespace\" : \"payments\",\n  \"clusterName\" : \"prod-us-east-1\",\n  \"workloadType\" : \"DEPLOYMENT\",\n  \"containerName\" : \"payment-processor\",\n  \"status\" : \"RECOMMENDATION_READY\",\n  \"owner\" : \"payments-team\",\n  \"criticality\" : \"TIER_0\",\n  \"analysisWindowDays\" : 14,\n  \"detectedWorkloadPattern\" : \"PERIODIC\",\n  \"currentResources\" : {\n    \"memoryRequestMi\" : 4096,\n    \"memoryLimitMi\" : 8192,\n    \"cpuRequestMillicores\" : 2000,\n    \"cpuLimitMillicores\" : 4000\n  },\n  \"usage\" : {\n    \"oomKillsLastWindow\" : 0,\n    \"throttlingEventsLastWindow\" : 12,\n    \"memory\" : {\n      \"p50Mi\" : 680,\n      \"p99Mi\" : 1580,\n      \"avgUtilizationPercent\" : 27.3,\n      \"p95Mi\" : 1120,\n      \"maxMi\" : 2340\n    },\n    \"cpu\" : {\n      \"maxMillicores\" : 1450,\n      \"p95Millicores\" : 420,\n      \"p50Millicores\" : 180,\n      \"avgUtilizationPercent\" : 9.0,\n      \"p99Millicores\" : 780\n    }\n  },\n  \"recommendation\" : {\n    \"projectedSavings\" : {\n      \"monthlySavingsUSD\" : 245.5,\n      \"cpuSavedMillicores\" : 1500,\n      \"savingsPercent\" : 62.5,\n      \"assumption\" : \"Based on 3 replicas × $0.04/vCPU-hr + $0.005/GiB-hr for 730 hours.\",\n      \"yearlySavingsUSD\" : 2946.0,\n      \"memorySavedMi\" : 2560\n    },\n    \"confidenceScore\" : 0.87,\n    \"recommendedResources\" : {\n      \"memoryRequestMi\" : 1536,\n      \"memoryLimitMi\" : 2048,\n      \"cpuRequestMillicores\" : 500,\n      \"cpuLimitMillicores\" : 1000\n    },\n    \"changes\" : [ {\n      \"newValue\" : \"500m\",\n      \"field\" : \"resources.requests.cpu\",\n      \"changeType\" : \"DECREASE\",\n      \"changePercent\" : -75.0,\n      \"currentValue\" : \"2000m\"\n    }, {\n      \"newValue\" : \"500m\",\n      \"field\" : \"resources.requests.cpu\",\n      \"changeType\" : \"DECREASE\",\n      \"changePercent\" : -75.0,\n      \"currentValue\" : \"2000m\"\n    } ],\n    \"generatedAt\" : 948603367000,\n    \"alternatives\" : [ {\n      \"projectedMonthlySavingsUSD\" : 120.0,\n      \"recommendedResources\" : {\n        \"key\" : \"\"\n      },\n      \"description\" : \"Conservative: keep memory at 2048Mi, reduce CPU only\",\n      \"risk\" : \"SAFE\"\n    }, {\n      \"projectedMonthlySavingsUSD\" : 120.0,\n      \"recommendedResources\" : {\n        \"key\" : \"\"\n      },\n      \"description\" : \"Conservative: keep memory at 2048Mi, reduce CPU only\",\n      \"risk\" : \"SAFE\"\n    } ],\n    \"recommendationId\" : \"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\n    \"riskAssessment\" : {\n      \"oomRiskReasoning\" : \"P99 memory is 1580Mi; recommended request 1536Mi will OOM during peaks. Consider 2048Mi request.\",\n      \"performanceRiskReasoning\" : \"All criticality TIER_0 safety margins respected.\",\n      \"overallRisk\" : \"MEDIUM\",\n      \"oomRisk\" : \"MEDIUM\",\n      \"performanceRisk\" : \"LOW\",\n      \"throttlingRisk\" : \"LOW\",\n      \"throttlingRiskReasoning\" : \"P99 CPU 780m; limit 1000m provides 28% buffer.\"\n    },\n    \"rationale\" : [ \"P95 CPU usage is 420m; recommending 500m with 19% buffer.\", \"Peak CPU (1450m) occurs during hourly batch; limit set to 1000m may cause throttling.\", \"Memory P99 is 1580Mi; recommending 1536Mi request risks OOM during peaks — recommend 1536Mi.\" ],\n    \"expiresAt\" : 1794493800000,\n    \"status\" : \"PENDING\"\n  },\n  \"analysisWindowStart\" : 948603367000,\n  \"analysisWindowEnd\" : 948603367000,\n  \"usageHistory\" : [ {\n    \"replicas\" : 3,\n    \"cpuMillicores\" : 420,\n    \"memoryMi\" : 1120,\n    \"timestamp\" : 948603367000\n  }, {\n    \"replicas\" : 3,\n    \"cpuMillicores\" : 420,\n    \"memoryMi\" : 1120,\n    \"timestamp\" : 948603367000\n  } ],\n  \"createdAt\" : 948603367000,\n  \"lastAnalyzedAt\" : 948603367000,\n  \"auditReference\" : \"audit://rightsizer/workload-9c8f1a3b\"\n}"
+      }, {
+        "name" : "Not Found",
+        "originalRequest" : {
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/workloads/9c8f1a3b-6d7e-4a12-8f5e-123456789abc?includeUsageHistory=true",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "workloads", "9c8f1a3b-6d7e-4a12-8f5e-123456789abc" ],
+            "query" : [ {
+              "key" : "includeUsageHistory",
+              "value" : true
+            } ]
+          }
+        },
+        "status" : "Not Found",
+        "code" : 404,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"timestamp\" : \"2026-11-10T15:53:14.937916723Z\",\n  \"status\" : 404,\n  \"code\" : \"request_failed\",\n  \"userMessage\" : \"Request failed\",\n  \"systemMessage\" : \"Sample error for documentation purposes\",\n  \"path\" : \"{{baseUrl}}\",\n  \"correlationId\" : \"sample-correlation-id\"\n}"
+      } ]
+    }, {
+      "name" : "Trigger a fresh analysis and generate a new recommendation",
+      "request" : {
+        "method" : "POST",
+        "header" : [ {
+          "key" : "Authorization",
+          "value" : "Bearer {{bearerToken}}"
+        }, {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        }, {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/workloads/9c8f1a3b-6d7e-4a12-8f5e-123456789abc/analyze",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "workloads", "9c8f1a3b-6d7e-4a12-8f5e-123456789abc", "analyze" ]
+        },
+        "body" : {
+          "mode" : "raw",
+          "raw" : "{\n  \"reason\" : \"Traffic increased 3x after Diwali sale; re-checking sizing.\",\n  \"overrideWindowDays\" : 7,\n  \"overrideSafetyMarginPercent\" : 40,\n  \"requestedBy\" : \"amit.kumar@forgesphere.example.com\"\n}",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
+        }
+      },
+      "response" : [ {
+        "name" : "Accepted",
+        "originalRequest" : {
+          "method" : "POST",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Content-Type",
+            "value" : "application/json"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/workloads/9c8f1a3b-6d7e-4a12-8f5e-123456789abc/analyze",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "workloads", "9c8f1a3b-6d7e-4a12-8f5e-123456789abc", "analyze" ]
+          },
+          "body" : {
+            "mode" : "raw",
+            "raw" : "{\n  \"reason\" : \"Traffic increased 3x after Diwali sale; re-checking sizing.\",\n  \"overrideWindowDays\" : 7,\n  \"overrideSafetyMarginPercent\" : 40,\n  \"requestedBy\" : \"amit.kumar@forgesphere.example.com\"\n}",
+            "options" : {
+              "raw" : {
+                "language" : "json"
+              }
+            }
+          }
+        },
+        "status" : "Accepted",
+        "code" : 202,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"jobId\" : \"c1a2c3d4-e5f6-7890-1234-567890abcdef\",\n  \"workloadId\" : \"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\n  \"status\" : \"ANALYZING_USAGE\",\n  \"startedAt\" : 948603367000,\n  \"completedAt\" : 948603367000,\n  \"progressPercent\" : 62,\n  \"estimatedCompletionSeconds\" : 30,\n  \"resultRecommendationId\" : \"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\n  \"error\" : \"error\"\n}"
+      }, {
+        "name" : "Bad Request",
+        "originalRequest" : {
+          "method" : "POST",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Content-Type",
+            "value" : "application/json"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/workloads/9c8f1a3b-6d7e-4a12-8f5e-123456789abc/analyze",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "workloads", "9c8f1a3b-6d7e-4a12-8f5e-123456789abc", "analyze" ]
+          },
+          "body" : {
+            "mode" : "raw",
+            "raw" : "{\n  \"reason\" : \"Traffic increased 3x after Diwali sale; re-checking sizing.\",\n  \"overrideWindowDays\" : 7,\n  \"overrideSafetyMarginPercent\" : 40,\n  \"requestedBy\" : \"amit.kumar@forgesphere.example.com\"\n}",
+            "options" : {
+              "raw" : {
+                "language" : "json"
+              }
+            }
+          }
+        },
+        "status" : "Bad Request",
+        "code" : 400,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"timestamp\" : \"2026-11-10T15:53:14.938245511Z\",\n  \"status\" : 400,\n  \"code\" : \"request_failed\",\n  \"userMessage\" : \"Request failed\",\n  \"systemMessage\" : \"Sample error for documentation purposes\",\n  \"path\" : \"{{baseUrl}}\",\n  \"correlationId\" : \"sample-correlation-id\"\n}"
+      } ]
+    } ]
+  }, {
+    "name" : "Recommendations",
+    "item" : [ {
+      "name" : "Apply a right-sizing recommendation to the workload",
+      "request" : {
+        "method" : "POST",
+        "header" : [ {
+          "key" : "Authorization",
+          "value" : "Bearer {{bearerToken}}"
+        }, {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        }, {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/recommendations/b1a2c3d4-e5f6-7890-1234-567890abcdef/apply",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "recommendations", "b1a2c3d4-e5f6-7890-1234-567890abcdef", "apply" ]
+        },
+        "body" : {
+          "mode" : "raw",
+          "raw" : "{\n  \"mode\" : \"STAGED\",\n  \"reason\" : \"CPU requests 4x over P95; safe to reduce with 25% buffer.\",\n  \"appliedBy\" : \"amit.kumar@forgesphere.example.com\",\n  \"autoRollbackOnOom\" : true,\n  \"rollbackWindowHours\" : 24,\n  \"notifyChannels\" : [ \"SLACK\" ]\n}",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
+        }
+      },
+      "response" : [ {
+        "name" : "Accepted",
+        "originalRequest" : {
+          "method" : "POST",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Content-Type",
+            "value" : "application/json"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/recommendations/b1a2c3d4-e5f6-7890-1234-567890abcdef/apply",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "recommendations", "b1a2c3d4-e5f6-7890-1234-567890abcdef", "apply" ]
+          },
+          "body" : {
+            "mode" : "raw",
+            "raw" : "{\n  \"mode\" : \"STAGED\",\n  \"reason\" : \"CPU requests 4x over P95; safe to reduce with 25% buffer.\",\n  \"appliedBy\" : \"amit.kumar@forgesphere.example.com\",\n  \"autoRollbackOnOom\" : true,\n  \"rollbackWindowHours\" : 24,\n  \"notifyChannels\" : [ \"SLACK\" ]\n}",
+            "options" : {
+              "raw" : {
+                "language" : "json"
+              }
+            }
+          }
+        },
+        "status" : "Accepted",
+        "code" : 202,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"applyId\" : \"d1a2c3d4-e5f6-7890-1234-567890abcdef\",\n  \"recommendationId\" : \"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\n  \"workloadId\" : \"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\n  \"mode\" : \"STAGED\",\n  \"status\" : \"MONITORING\",\n  \"startedAt\" : 948603367000,\n  \"completedAt\" : \"completedAt\",\n  \"monitoringUntil\" : 1793975400000,\n  \"beforeResources\" : {\n    \"key\" : \"\"\n  },\n  \"afterResources\" : {\n    \"key\" : \"\"\n  },\n  \"replicasUpdated\" : 1,\n  \"replicasTotal\" : 3,\n  \"postApplyMetrics\" : {\n    \"avgCpuUtilizationPercent\" : 42.5,\n    \"throttlingEventsObserved\" : 2,\n    \"oomKillsObserved\" : 0,\n    \"avgMemoryUtilizationPercent\" : 68.2,\n    \"actualMonthlySavingsUSD\" : 238.4\n  },\n  \"rollbackReason\" : \"rollbackReason\",\n  \"error\" : \"error\",\n  \"appliedBy\" : \"amit.kumar@forgesphere.example.com\",\n  \"auditReference\" : \"audit://rightsizer/apply-d1a2c3d4\"\n}"
+      }, {
+        "name" : "Bad Request",
+        "originalRequest" : {
+          "method" : "POST",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Content-Type",
+            "value" : "application/json"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/recommendations/b1a2c3d4-e5f6-7890-1234-567890abcdef/apply",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "recommendations", "b1a2c3d4-e5f6-7890-1234-567890abcdef", "apply" ]
+          },
+          "body" : {
+            "mode" : "raw",
+            "raw" : "{\n  \"mode\" : \"STAGED\",\n  \"reason\" : \"CPU requests 4x over P95; safe to reduce with 25% buffer.\",\n  \"appliedBy\" : \"amit.kumar@forgesphere.example.com\",\n  \"autoRollbackOnOom\" : true,\n  \"rollbackWindowHours\" : 24,\n  \"notifyChannels\" : [ \"SLACK\" ]\n}",
+            "options" : {
+              "raw" : {
+                "language" : "json"
+              }
+            }
+          }
+        },
+        "status" : "Bad Request",
+        "code" : 400,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"timestamp\" : \"2026-11-10T15:53:14.938663705Z\",\n  \"status\" : 400,\n  \"code\" : \"request_failed\",\n  \"userMessage\" : \"Request failed\",\n  \"systemMessage\" : \"Sample error for documentation purposes\",\n  \"path\" : \"{{baseUrl}}\",\n  \"correlationId\" : \"sample-correlation-id\"\n}"
+      } ]
+    } ]
+  } ]
+}
