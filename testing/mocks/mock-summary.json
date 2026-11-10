@@ -1,0 +1,7 @@
+{
+  "artifactId" : "kubernetes-workload-right-sizer",
+  "status" : "CREATED",
+  "message" : "Mock collection generated",
+  "endpointCount" : 5,
+  "generatedAt" : "2026-11-10T15:53:16.018194645Z"
+}

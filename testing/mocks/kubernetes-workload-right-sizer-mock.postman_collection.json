@@ -1,0 +1,179 @@
+{
+  "info" : {
+    "name" : "kubernetes-workload-right-sizer Mock Test Collection",
+    "description" : "Generated from ForgeSphere mock endpoint definitions.",
+    "schema" : "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable" : [ {
+    "key" : "mockBaseUrl",
+    "value" : "https://forgesphere.probestack.io/mock-api/v1/api/mocks/mock-14aec968"
+  }, {
+    "key" : "userEmail",
+    "value" : ""
+  }, {
+    "key" : "id",
+    "value" : "sample-id"
+  } ],
+  "item" : [ {
+    "name" : "GET /workloads",
+    "request" : {
+      "method" : "GET",
+      "header" : [ {
+        "key" : "Accept",
+        "value" : "application/json"
+      }, {
+        "key" : "x-user-email",
+        "value" : "{{userEmail}}"
+      } ],
+      "url" : {
+        "raw" : "{{mockBaseUrl}}/workloads"
+      }
+    },
+    "response" : [ {
+      "name" : "Mock 200",
+      "code" : 200,
+      "status" : "OK",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"content\":[{\"workloadId\":\"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\"workloadName\":\"payment-processor\",\"namespace\":\"payments\",\"clusterName\":\"prod-us-east-1\",\"workloadType\":\"DEPLOYMENT\",\"containerName\":\"payment-processor\",\"status\":\"RECOMMENDATION_READY\",\"owner\":\"payments-team\",\"criticality\":\"TIER_0\",\"analysisWindowDays\":14,\"detectedWorkloadPattern\":\"PERIODIC\",\"currentResources\":{\"cpuRequestMillicores\":2000,\"cpuLimitMillicores\":4000,\"memoryRequestMi\":4096,\"memoryLimitMi\":8192},\"usage\":{\"cpu\":{\"p50Millicores\":180,\"p95Millicores\":420,\"p99Millicores\":780,\"maxMillicores\":1450,\"avgUtilizationPercent\":9.0},\"memory\":{\"p50Mi\":680,\"p95Mi\":1120,\"p99Mi\":1580,\"maxMi\":2340,\"avgUtilizationPercent\":27.3},\"oomKillsLastWindow\":0,\"throttlingEventsLastWindow\":12},\"recommendation\":{\"recommendationId\":\"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\"status\":\"PENDING\",\"recommendedResources\":{\"cpuRequestMillicores\":500,\"cpuLimitMillicores\":1000,\"memoryRequestMi\":1536,\"memoryLimitMi\":2048},\"changes\":[{\"field\":\"resources.requests.cpu\",\"currentValue\":\"2000m\",\"newValue\":\"500m\",\"changeType\":\"DECREASE\",\"changePercent\":-75.0}],\"rationale\":[\"P95 CPU usage is 420m; recommending 500m with 19% buffer.\",\"Peak CPU (1450m) occurs during hourly batch; limit set to 1000m may cause throttling.\",\"Memory P99 is 1580Mi; recommending 1536Mi request risks OOM during peaks — recommend 1536Mi.\"],\"projectedSavings\":{\"monthlySavingsUSD\":245.5,\"yearlySavingsUSD\":2946.0,\"cpuSavedMillicores\":1500,\"memorySavedMi\":2560,\"savingsPercent\":62.5,\"assumption\":\"Based on 3 replicas × $0.04/vCPU-hr + $0.005/GiB-hr for 730 hours.\"},\"riskAssessment\":{\"overallRisk\":\"MEDIUM\",\"oomRisk\":\"MEDIUM\",\"oomRiskReasoning\":\"P99 memory is 1580Mi; recommended request 1536Mi will OOM during peaks. Consider 2048Mi request.\",\"throttlingRisk\":\"LOW\",\"throttlingRiskReasoning\":\"P99 CPU 780m; limit 1000m provides 28% buffer.\",\"performanceRisk\":\"LOW\",\"performanceRiskReasoning\":\"All criticality TIER_0 safety margins respected.\"},\"confidenceScore\":0.87,\"alternatives\":[{\"description\":\"Conservative: keep memory at 2048Mi, reduce CPU only\",\"recommendedResources\":{},\"projectedMonthlySavingsUSD\":120.0,\"risk\":\"SAFE\"}],\"generatedAt\":\"2024-01-01T00:00:00Z\",\"expiresAt\":\"2026-11-12T14:30:00Z\"},\"analysisWindowStart\":\"2024-01-01T00:00:00Z\",\"analysisWindowEnd\":\"2024-01-01T00:00:00Z\",\"usageHistory\":[{\"timestamp\":\"2024-01-01T00:00:00Z\",\"cpuMillicores\":420,\"memoryMi\":1120,\"replicas\":3}],\"createdAt\":\"2024-01-01T00:00:00Z\",\"lastAnalyzedAt\":\"2024-01-01T00:00:00Z\",\"auditReference\":\"audit://rightsizer/workload-9c8f1a3b\"}],\"totalElements\":247,\"totalPages\":13,\"page\":0,\"size\":20,\"summary\":{\"totalWorkloads\":247,\"workloadsWithRecommendation\":89,\"oomRiskCount\":12,\"cpuWastePercentAvg\":62.5,\"memoryWastePercentAvg\":48.3,\"totalMonthlySavingsOpportunityUSD\":12450.0,\"totalYearlySavingsOpportunityUSD\":149400.0}}"
+    } ]
+  }, {
+    "name" : "POST /workloads",
+    "request" : {
+      "method" : "POST",
+      "header" : [ {
+        "key" : "Accept",
+        "value" : "application/json"
+      }, {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      }, {
+        "key" : "x-user-email",
+        "value" : "{{userEmail}}"
+      } ],
+      "url" : {
+        "raw" : "{{mockBaseUrl}}/workloads"
+      },
+      "body" : {
+        "mode" : "raw",
+        "raw" : "{\"workloadName\":\"payment-processor\",\"namespace\":\"payments\",\"clusterName\":\"prod-us-east-1\",\"workloadType\":\"DEPLOYMENT\",\"containerName\":\"payment-processor\",\"owner\":\"payments-team\",\"criticality\":\"TIER_0\",\"analysisWindowDays\":14,\"workloadPattern\":\"PERIODIC\",\"safetyMarginPercent\":25,\"minimumResources\":{\"cpuRequestMillicores\":100,\"memoryRequestMi\":256},\"maximumResources\":{\"cpuRequestMillicores\":4000,\"memoryRequestMi\":8192},\"autoApply\":false,\"notifyChannels\":[\"SLACK\"]}",
+        "options" : {
+          "raw" : {
+            "language" : "json"
+          }
+        }
+      }
+    },
+    "response" : [ {
+      "name" : "Mock 201",
+      "code" : 201,
+      "status" : "OK",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"workloadId\":\"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\"workloadName\":\"payment-processor\",\"namespace\":\"payments\",\"clusterName\":\"prod-us-east-1\",\"workloadType\":\"DEPLOYMENT\",\"containerName\":\"payment-processor\",\"status\":\"RECOMMENDATION_READY\",\"owner\":\"payments-team\",\"criticality\":\"TIER_0\",\"analysisWindowDays\":14,\"detectedWorkloadPattern\":\"PERIODIC\",\"currentResources\":{\"cpuRequestMillicores\":2000,\"cpuLimitMillicores\":4000,\"memoryRequestMi\":4096,\"memoryLimitMi\":8192},\"usage\":{\"cpu\":{\"p50Millicores\":180,\"p95Millicores\":420,\"p99Millicores\":780,\"maxMillicores\":1450,\"avgUtilizationPercent\":9.0},\"memory\":{\"p50Mi\":680,\"p95Mi\":1120,\"p99Mi\":1580,\"maxMi\":2340,\"avgUtilizationPercent\":27.3},\"oomKillsLastWindow\":0,\"throttlingEventsLastWindow\":12},\"recommendation\":{\"recommendationId\":\"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\"status\":\"PENDING\",\"recommendedResources\":{\"cpuRequestMillicores\":500,\"cpuLimitMillicores\":1000,\"memoryRequestMi\":1536,\"memoryLimitMi\":2048},\"changes\":[{\"field\":\"resources.requests.cpu\",\"currentValue\":\"2000m\",\"newValue\":\"500m\",\"changeType\":\"DECREASE\",\"changePercent\":-75.0}],\"rationale\":[\"P95 CPU usage is 420m; recommending 500m with 19% buffer.\",\"Peak CPU (1450m) occurs during hourly batch; limit set to 1000m may cause throttling.\",\"Memory P99 is 1580Mi; recommending 1536Mi request risks OOM during peaks — recommend 1536Mi.\"],\"projectedSavings\":{\"monthlySavingsUSD\":245.5,\"yearlySavingsUSD\":2946.0,\"cpuSavedMillicores\":1500,\"memorySavedMi\":2560,\"savingsPercent\":62.5,\"assumption\":\"Based on 3 replicas × $0.04/vCPU-hr + $0.005/GiB-hr for 730 hours.\"},\"riskAssessment\":{\"overallRisk\":\"MEDIUM\",\"oomRisk\":\"MEDIUM\",\"oomRiskReasoning\":\"P99 memory is 1580Mi; recommended request 1536Mi will OOM during peaks. Consider 2048Mi request.\",\"throttlingRisk\":\"LOW\",\"throttlingRiskReasoning\":\"P99 CPU 780m; limit 1000m provides 28% buffer.\",\"performanceRisk\":\"LOW\",\"performanceRiskReasoning\":\"All criticality TIER_0 safety margins respected.\"},\"confidenceScore\":0.87,\"alternatives\":[{\"description\":\"Conservative: keep memory at 2048Mi, reduce CPU only\",\"recommendedResources\":{},\"projectedMonthlySavingsUSD\":120.0,\"risk\":\"SAFE\"}],\"generatedAt\":\"2024-01-01T00:00:00Z\",\"expiresAt\":\"2026-11-12T14:30:00Z\"},\"analysisWindowStart\":\"2024-01-01T00:00:00Z\",\"analysisWindowEnd\":\"2024-01-01T00:00:00Z\",\"usageHistory\":[{\"timestamp\":\"2024-01-01T00:00:00Z\",\"cpuMillicores\":420,\"memoryMi\":1120,\"replicas\":3}],\"createdAt\":\"2024-01-01T00:00:00Z\",\"lastAnalyzedAt\":\"2024-01-01T00:00:00Z\",\"auditReference\":\"audit://rightsizer/workload-9c8f1a3b\"}"
+    } ]
+  }, {
+    "name" : "GET /workloads/{workloadId}",
+    "request" : {
+      "method" : "GET",
+      "header" : [ {
+        "key" : "Accept",
+        "value" : "application/json"
+      }, {
+        "key" : "x-user-email",
+        "value" : "{{userEmail}}"
+      } ],
+      "url" : {
+        "raw" : "{{mockBaseUrl}}/workloads/{workloadId}"
+      }
+    },
+    "response" : [ {
+      "name" : "Mock 200",
+      "code" : 200,
+      "status" : "OK",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"workloadId\":\"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\"workloadName\":\"payment-processor\",\"namespace\":\"payments\",\"clusterName\":\"prod-us-east-1\",\"workloadType\":\"DEPLOYMENT\",\"containerName\":\"payment-processor\",\"status\":\"RECOMMENDATION_READY\",\"owner\":\"payments-team\",\"criticality\":\"TIER_0\",\"analysisWindowDays\":14,\"detectedWorkloadPattern\":\"PERIODIC\",\"currentResources\":{\"cpuRequestMillicores\":2000,\"cpuLimitMillicores\":4000,\"memoryRequestMi\":4096,\"memoryLimitMi\":8192},\"usage\":{\"cpu\":{\"p50Millicores\":180,\"p95Millicores\":420,\"p99Millicores\":780,\"maxMillicores\":1450,\"avgUtilizationPercent\":9.0},\"memory\":{\"p50Mi\":680,\"p95Mi\":1120,\"p99Mi\":1580,\"maxMi\":2340,\"avgUtilizationPercent\":27.3},\"oomKillsLastWindow\":0,\"throttlingEventsLastWindow\":12},\"recommendation\":{\"recommendationId\":\"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\"status\":\"PENDING\",\"recommendedResources\":{\"cpuRequestMillicores\":500,\"cpuLimitMillicores\":1000,\"memoryRequestMi\":1536,\"memoryLimitMi\":2048},\"changes\":[{\"field\":\"resources.requests.cpu\",\"currentValue\":\"2000m\",\"newValue\":\"500m\",\"changeType\":\"DECREASE\",\"changePercent\":-75.0}],\"rationale\":[\"P95 CPU usage is 420m; recommending 500m with 19% buffer.\",\"Peak CPU (1450m) occurs during hourly batch; limit set to 1000m may cause throttling.\",\"Memory P99 is 1580Mi; recommending 1536Mi request risks OOM during peaks — recommend 1536Mi.\"],\"projectedSavings\":{\"monthlySavingsUSD\":245.5,\"yearlySavingsUSD\":2946.0,\"cpuSavedMillicores\":1500,\"memorySavedMi\":2560,\"savingsPercent\":62.5,\"assumption\":\"Based on 3 replicas × $0.04/vCPU-hr + $0.005/GiB-hr for 730 hours.\"},\"riskAssessment\":{\"overallRisk\":\"MEDIUM\",\"oomRisk\":\"MEDIUM\",\"oomRiskReasoning\":\"P99 memory is 1580Mi; recommended request 1536Mi will OOM during peaks. Consider 2048Mi request.\",\"throttlingRisk\":\"LOW\",\"throttlingRiskReasoning\":\"P99 CPU 780m; limit 1000m provides 28% buffer.\",\"performanceRisk\":\"LOW\",\"performanceRiskReasoning\":\"All criticality TIER_0 safety margins respected.\"},\"confidenceScore\":0.87,\"alternatives\":[{\"description\":\"Conservative: keep memory at 2048Mi, reduce CPU only\",\"recommendedResources\":{},\"projectedMonthlySavingsUSD\":120.0,\"risk\":\"SAFE\"}],\"generatedAt\":\"2024-01-01T00:00:00Z\",\"expiresAt\":\"2026-11-12T14:30:00Z\"},\"analysisWindowStart\":\"2024-01-01T00:00:00Z\",\"analysisWindowEnd\":\"2024-01-01T00:00:00Z\",\"usageHistory\":[{\"timestamp\":\"2024-01-01T00:00:00Z\",\"cpuMillicores\":420,\"memoryMi\":1120,\"replicas\":3}],\"createdAt\":\"2024-01-01T00:00:00Z\",\"lastAnalyzedAt\":\"2024-01-01T00:00:00Z\",\"auditReference\":\"audit://rightsizer/workload-9c8f1a3b\"}"
+    } ]
+  }, {
+    "name" : "POST /workloads/{workloadId}/analyze",
+    "request" : {
+      "method" : "POST",
+      "header" : [ {
+        "key" : "Accept",
+        "value" : "application/json"
+      }, {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      }, {
+        "key" : "x-user-email",
+        "value" : "{{userEmail}}"
+      } ],
+      "url" : {
+        "raw" : "{{mockBaseUrl}}/workloads/{workloadId}/analyze"
+      },
+      "body" : {
+        "mode" : "raw",
+        "raw" : "{\"reason\":\"Traffic increased 3x after Diwali sale; re-checking sizing.\",\"overrideWindowDays\":7,\"overrideSafetyMarginPercent\":40,\"requestedBy\":\"amit.kumar@forgesphere.example.com\"}",
+        "options" : {
+          "raw" : {
+            "language" : "json"
+          }
+        }
+      }
+    },
+    "response" : [ {
+      "name" : "Mock 202",
+      "code" : 202,
+      "status" : "OK",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"jobId\":\"c1a2c3d4-e5f6-7890-1234-567890abcdef\",\"workloadId\":\"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\"status\":\"ANALYZING_USAGE\",\"startedAt\":\"2024-01-01T00:00:00Z\",\"completedAt\":\"2024-01-01T00:00:00Z\",\"progressPercent\":62,\"estimatedCompletionSeconds\":30,\"resultRecommendationId\":\"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\"error\":\"string\"}"
+    } ]
+  }, {
+    "name" : "POST /recommendations/{recommendationId}/apply",
+    "request" : {
+      "method" : "POST",
+      "header" : [ {
+        "key" : "Accept",
+        "value" : "application/json"
+      }, {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      }, {
+        "key" : "x-user-email",
+        "value" : "{{userEmail}}"
+      } ],
+      "url" : {
+        "raw" : "{{mockBaseUrl}}/recommendations/{recommendationId}/apply"
+      },
+      "body" : {
+        "mode" : "raw",
+        "raw" : "{\"mode\":\"STAGED\",\"reason\":\"CPU requests 4x over P95; safe to reduce with 25% buffer.\",\"appliedBy\":\"amit.kumar@forgesphere.example.com\",\"autoRollbackOnOom\":true,\"rollbackWindowHours\":24,\"notifyChannels\":[\"SLACK\"]}",
+        "options" : {
+          "raw" : {
+            "language" : "json"
+          }
+        }
+      }
+    },
+    "response" : [ {
+      "name" : "Mock 202",
+      "code" : 202,
+      "status" : "OK",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"applyId\":\"d1a2c3d4-e5f6-7890-1234-567890abcdef\",\"recommendationId\":\"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\"workloadId\":\"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\"mode\":\"STAGED\",\"status\":\"MONITORING\",\"startedAt\":\"2024-01-01T00:00:00Z\",\"completedAt\":\"string\",\"monitoringUntil\":\"2026-11-06T14:30:00Z\",\"beforeResources\":{},\"afterResources\":{},\"replicasUpdated\":1,\"replicasTotal\":3,\"postApplyMetrics\":{\"oomKillsObserved\":0,\"throttlingEventsObserved\":2,\"avgCpuUtilizationPercent\":42.5,\"avgMemoryUtilizationPercent\":68.2,\"actualMonthlySavingsUSD\":238.4},\"rollbackReason\":\"string\",\"error\":\"string\",\"appliedBy\":\"amit.kumar@forgesphere.example.com\",\"auditReference\":\"audit://rightsizer/apply-d1a2c3d4\"}"
+    } ]
+  } ]
+}
